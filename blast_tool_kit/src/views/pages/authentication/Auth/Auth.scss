@@ -1,0 +1,197 @@
+.bg {
+    background: #130624;
+
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+a{
+    text-decoration: none;
+}
+
+.box-container {
+    width: 25%;
+    height: auto;
+}
+
+.box-content {
+    width: 100%;
+    height: 566px;
+
+    background: #FFFFFF;
+    box-shadow: 17px 18px 33px rgba(0, 0, 0, 0.25);
+    border-radius: 32px;
+    padding: 50px 50px;
+}
+
+.container-btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-items: center;
+}
+
+.tool {
+    width: 100%;
+    height: 80px;
+    background: #FFFFFF;
+    border-radius: 64px;
+    margin-top: 32px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.tool > a {
+    width: 50%;
+    height: 90%;
+
+
+    border-radius: 36px;
+}
+
+.btn-active{
+    background-color: #6460FE;
+
+    span{
+        color: #FFFFFF !important;
+    }
+    img{
+        width: auto;
+        height: 15px;
+        color: white !important;
+    }
+}
+
+.tool .btn-login {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool .btn-register {
+    display: grid;
+
+    grid-template-columns: repeat(2, auto);
+    align-items: center;
+}
+
+.btn-register img {
+    justify-self: center;
+    width: 15px;
+    height: auto;
+}
+
+
+
+.btn-register span {
+    justify-self: start;
+    color: #6460FE;
+    font-style: normal;
+
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+
+.tool .btn-login span {
+    color: #FFFFFF;
+    font-style: normal;
+
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+
+}
+
+.tool .btn-login img {
+    margin-left: 10px;
+}
+
+.form-content{
+    margin-top: 20px;
+}
+
+.img-logo{
+    display: grid;
+    width: auto;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-logo img{
+    width: 200px;
+    height: auto;
+    justify-self: center;
+    height: 100px;
+}
+
+.format-input{
+    padding: 20px 20px !important;
+    height: 60px;
+    border-radius: 16px !important;
+    box-sizing: border-box;
+}
+
+.suggest-form{
+    display: grid;
+    width: 100%;
+    height: auto;
+
+    a{
+        justify-self: end;
+        font-size: 15px;
+    }
+}
+
+.format-btn{
+    width: 45%;
+    height: 60px;
+
+    margin-top: 30px;
+
+    border-radius: 60px !important;
+    
+}
+
+.btn-back{
+    background: #252525 !important;
+}
+
+.btn-submit{
+    background: #6460FE !important;
+}
+
+@media (max-width: 1200px) and (min-width: 675px) {
+    .box-container{
+        width: 50%;
+    }
+}
+
+@media (max-width: 675px){
+    .box-container{
+        width: 90%;
+    }
+}
+
+@media (max-height: 685px) and (min-height: 630px){
+    .box-content{
+        height: 510px;
+    }
+}
+
+@media (max-height: 630px){
+    .box-content{
+        height: 450px;
+        padding: 25px;
+    }
+    .container-btn > button{
+        margin: 0;
+    }
+}

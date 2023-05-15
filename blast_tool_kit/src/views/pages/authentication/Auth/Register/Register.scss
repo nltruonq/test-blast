@@ -1,0 +1,67 @@
+.container-btn button{
+    margin: 0;
+}
+
+
+.form-content{
+    margin: 0;
+}
+
+.btn-register_register{
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+
+    img{
+        margin-left: 10px;
+    }
+    span{
+        font-weight: bold;
+    }
+}
+
+.btn-login_register{
+    display: grid !important;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    grid-template-columns: repeat(2,auto
+    );
+
+    span{
+        justify-self: center;
+        color: #6460FE !important;
+        font-weight: bold;
+    }
+
+    img{
+        justify-self: end;
+        width: 15px;
+        height: auto;
+        transform: rotateY(180deg);
+        margin-left: 10px;
+    }
+}
+
+.color-btn-register{
+    background: black !important;
+}
+
+.color-btn-register:hover{
+    background: #6460FE !important;
+}
+
+@media (max-height: 690px){
+    .box-content{
+        padding: 25px 50px;
+    }
+}
+
+@media (max-height: 640px) {
+    .tool{
+        display: none;
+    }
+    .box-content{
+        height: 90%;
+    }
+}
