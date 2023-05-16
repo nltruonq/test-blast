@@ -14,9 +14,7 @@ import { Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, 
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const url = 'http://localhost:8000/api';
-const authen =
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTI3YjcwZmZiYTQ3MTQzYTg5NzgzMCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY4MzU2Nzk5NCwiZXhwIjoxNjg0MTcyNzk0fQ.Vr-BKCi-q9MBadfqovMBU2hEJgprsqpZ9eNhw6F-dtY';
+import { SERVER_API, AUTHEN } from '../../host/index';
 
 const Prompt = () => {
     const [prompts, setPrompts] = useState([]);
@@ -83,7 +81,7 @@ const Prompt = () => {
                     if (formValues) {
                         console.log(currentRow._id);
                         const rs = await axios.patch(
-                            `${url}/prompt/${currentRow._id}`,
+                            `${SERVER_API}/prompt/${currentRow._id}`,
                             {
                                 feature: formValues[0],
                                 band: formValues[1],
@@ -101,7 +99,7 @@ const Prompt = () => {
                             },
                             {
                                 headers: {
-                                    Authorization: authen
+                                    Authorization: AUTHEN
                                 }
                             }
                         );
@@ -124,9 +122,9 @@ const Prompt = () => {
                         confirmButtonText: 'Yes, delete it!'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            await axios.delete(`${url}/prompt/${currentRow._id}`, {
+                            await axios.delete(`${SERVER_API}/prompt/${currentRow._id}`, {
                                 headers: {
-                                    Authorization: authen
+                                    Authorization: AUTHEN
                                 }
                             });
                             await Swal.fire('Deleted!', 'This prompt has been deleted.', 'success');
@@ -150,9 +148,9 @@ const Prompt = () => {
     ];
 
     const getAllPrompts = async () => {
-        const data = await axios.get(`${url}/prompt`, {
+        const data = await axios.get(`${SERVER_API}/prompt`, {
             headers: {
-                Authorization: authen
+                Authorization: AUTHEN
             }
         });
         data.data = data.data.map((e, i) => ({
@@ -163,9 +161,9 @@ const Prompt = () => {
     };
 
     const getMenu = async () => {
-        const data = await axios.get(`${url}/menu`, {
+        const data = await axios.get(`${SERVER_API}/menu`, {
             headers: {
-                Authorization: authen
+                Authorization: AUTHEN
             }
         });
         setMenu(data.data);
@@ -200,7 +198,7 @@ const Prompt = () => {
 
         if (formValues) {
             const rs = await axios.post(
-                `${url}/prompt`,
+                `${SERVER_API}/prompt`,
                 {
                     feature: formValues[0],
                     band: formValues[1],
@@ -210,7 +208,7 @@ const Prompt = () => {
                 },
                 {
                     headers: {
-                        Authorization: authen
+                        Authorization: AUTHEN
                     }
                 }
             );

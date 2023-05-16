@@ -10,9 +10,7 @@ import { Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, 
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const url = 'http://localhost:8000/api';
-const authen =
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTI3YjcwZmZiYTQ3MTQzYTg5NzgzMCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY4MzU2Nzk5NCwiZXhwIjoxNjg0MTcyNzk0fQ.Vr-BKCi-q9MBadfqovMBU2hEJgprsqpZ9eNhw6F-dtY';
+import { SERVER_API, AUTHEN } from '../../host/index';
 
 const User = () => {
     const [users, setUsers] = useState([]);
@@ -57,7 +55,7 @@ const User = () => {
                         let exp_date = new Date(Date.now());
                         exp_date = new Date(exp_date.setDate(exp_date.getDate() + parseInt(aPackge.time))).toLocaleDateString();
                         await axios.patch(
-                            `${url}/user/add_package`,
+                            `${SERVER_API}/user/add_package`,
                             {
                                 username: currentRow.username,
                                 package: {
@@ -69,7 +67,7 @@ const User = () => {
                             },
                             {
                                 headers: {
-                                    Authorization: authen
+                                    Authorization: AUTHEN
                                 }
                             }
                         );
@@ -121,7 +119,7 @@ const User = () => {
 
                     if (formValues) {
                         const rs = await axios.patch(
-                            `${url}/user/${currentRow._id}`,
+                            `${SERVER_API}/user/${currentRow._id}`,
                             {
                                 username: formValues[0],
                                 email: formValues[1],
@@ -129,7 +127,7 @@ const User = () => {
                             },
                             {
                                 headers: {
-                                    Authorization: authen
+                                    Authorization: AUTHEN
                                 }
                             }
                         );
@@ -150,9 +148,9 @@ const User = () => {
                         confirmButtonText: 'Yes, delete it!'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            await axios.delete(`${url}/user/${currentRow._id}`, {
+                            await axios.delete(`${SERVER_API}/user/${currentRow._id}`, {
                                 headers: {
-                                    Authorization: authen
+                                    Authorization: AUTHEN
                                 },
                                 data: {
                                     userId: currentRow._id
@@ -182,18 +180,18 @@ const User = () => {
     ];
 
     const getAllPackage = async () => {
-        const data = await axios.get(`${url}/package/all`, {
+        const data = await axios.get(`${SERVER_API}/package/all`, {
             headers: {
-                Authorization: authen
+                Authorization: AUTHEN
             }
         });
         setPackages(data.data);
     };
 
     const getAllUser = async () => {
-        const data = await axios.get(`${url}/user/all`, {
+        const data = await axios.get(`${SERVER_API}/user/all`, {
             headers: {
-                Authorization: authen
+                Authorization: AUTHEN
             }
         });
         data.data = data.data.map((e, i) => ({

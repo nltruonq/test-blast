@@ -10,9 +10,7 @@ import { Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, 
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const url = 'http://localhost:8000/api';
-const authen =
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NTI3YjcwZmZiYTQ3MTQzYTg5NzgzMCIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY4MzU2Nzk5NCwiZXhwIjoxNjg0MTcyNzk0fQ.Vr-BKCi-q9MBadfqovMBU2hEJgprsqpZ9eNhw6F-dtY';
+import { SERVER_API, AUTHEN } from '../../host/index';
 
 const Package = () => {
     const [users, setUsers] = useState([]);
@@ -54,9 +52,9 @@ const Package = () => {
                         confirmButtonText: 'Yes, delete it!'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            await axios.delete(`${url}/package/${currentRow._id}`, {
+                            await axios.delete(`${SERVER_API}/package/${currentRow._id}`, {
                                 headers: {
-                                    Authorization: authen
+                                    Authorization: AUTHEN
                                 }
                             });
                             await Swal.fire('Deleted!', 'This package has been deleted.', 'success');
@@ -80,9 +78,9 @@ const Package = () => {
     ];
 
     const getAllPackage = async () => {
-        const data = await axios.get(`${url}/package/all`, {
+        const data = await axios.get(`${SERVER_API}/package/all`, {
             headers: {
-                Authorization: authen
+                Authorization: AUTHEN
             }
         });
         data.data = data.data.map((e, i) => ({
@@ -117,7 +115,7 @@ const Package = () => {
 
         if (formValues) {
             const rs = await axios.post(
-                `${url}/package`,
+                `${SERVER_API}/package`,
                 {
                     name: formValues[0],
                     description: formValues[1],
@@ -128,7 +126,7 @@ const Package = () => {
                 },
                 {
                     headers: {
-                        Authorization: authen
+                        Authorization: AUTHEN
                     }
                 }
             );
