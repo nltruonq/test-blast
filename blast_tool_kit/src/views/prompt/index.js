@@ -4,6 +4,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -19,6 +20,10 @@ import { SERVER_API, AUTHEN } from '../../host/index';
 const Prompt = () => {
     const [prompts, setPrompts] = useState([]);
     const [menu, setMenu] = useState({});
+
+    const [feature, setFeature] = useState('');
+    const [band, setBand] = useState('');
+    const [type, setType] = useState('');
 
     const columns = [
         { field: 'id', headerName: 'NO', width: 50 },
@@ -167,6 +172,9 @@ const Prompt = () => {
             }
         });
         setMenu(data.data);
+        setFeature(data.data.feature[0]);
+        setBand(data.data.band[0]);
+        setType(data.data.type[0]);
     };
 
     const handleCreate = async () => {
@@ -219,6 +227,16 @@ const Prompt = () => {
         }
     };
 
+    const handleChangeFeature = (event) => {
+        setFeature(event.target.value);
+    };
+    const handleChangeBand = (event) => {
+        setBand(event.target.value);
+    };
+    const handleChangeType = (event) => {
+        setType(event.target.value);
+    };
+
     useEffect(() => {
         getAllPrompts();
         getMenu();
@@ -228,9 +246,63 @@ const Prompt = () => {
             <Button onClick={handleCreate} variant="contained" color="primary" size="large">
                 Create
             </Button>
-            <div style={{ height: 600, width: '100%', marginTop: 20 }}>
+            <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                <FormControl sx={{ minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-label-feature">Feature</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label-feature"
+                        id="demo-simple-select-feature"
+                        value={feature}
+                        label="Feature"
+                        onChange={handleChangeFeature}
+                    >
+                        {menu?.feature?.map((e, i) => (
+                            <MenuItem key={i} value={e}>
+                                {e}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ minWidth: 200, marginLeft: 2 }}>
+                    <InputLabel id="demo-simple-select-label-band">Band</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label-band"
+                        id="demo-simple-select-band"
+                        value={band}
+                        label="Band"
+                        onChange={handleChangeBand}
+                    >
+                        {menu?.band?.map((e, i) => (
+                            <MenuItem key={i} value={e}>
+                                {e}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+                <FormControl sx={{ minWidth: 200, marginLeft: 2 }}>
+                    <InputLabel id="demo-simple-select-label-type">Type</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label-type"
+                        id="demo-simple-select-type"
+                        value={type}
+                        label="Type"
+                        onChange={handleChangeType}
+                    >
+                        {menu?.type?.map((e, i) => (
+                            <MenuItem key={i} value={e}>
+                                {e}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Box>
+            <div style={{ height: 500, width: '100%', marginTop: 10 }}>
                 <DataGrid
-                    rows={prompts}
+                    rows={prompts?.filter((e) => {
+                        if (feature.split(' ').join('') !== 'refine')
+                            return e.feature === feature.split(' ').join('') && e.band === band && e.fullType === type;
+                        return e.feature === feature.split(' ').join('');
+                    })}
                     columns={columns}
                     initialState={{
                         pagination: {
