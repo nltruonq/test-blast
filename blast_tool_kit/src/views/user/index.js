@@ -206,23 +206,66 @@ const User = () => {
         setUsers(data.data);
     };
 
+    const handleCreate = async () => {
+        const { value: formValues } = await Swal.fire({
+            title: 'Creating a prompt',
+            html:
+                `<label>Username</label><input id="swal-input1" class="swal2-input">` +
+                `<label>Password</label><input id="swal-input2" class="swal2-input">` +
+                '<label>Email</label><input id="swal-input3" class="swal2-input">',
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input1').value,
+                    document.getElementById('swal-input2').value,
+                    document.getElementById('swal-input3').value
+                ];
+            }
+        });
+
+        if (formValues) {
+            const rs = await axios.post(
+                `${SERVER_API}/auth/register`,
+                {
+                    username: formValues[0],
+                    password: formValues[1],
+                    email: formValues[2]
+                },
+                {
+                    headers: {
+                        Authorization: AUTHEN
+                    }
+                }
+            );
+            if (rs) {
+                await Swal.fire('Success!', '', 'success');
+                window.location.reload(false);
+            }
+        }
+    };
+
     useEffect(() => {
         getAllUser();
         getAllPackage();
     }, []);
     return (
-        <div style={{ height: 600, width: '100%' }}>
-            <DataGrid
-                rows={users}
-                columns={columns}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 5 }
-                    }
-                }}
-                pageSizeOptions={[5, 10]}
-            />
-        </div>
+        <>
+            <Button onClick={handleCreate} variant="contained" color="primary" size="large">
+                Create
+            </Button>
+            <div style={{ height: 600, width: '100%' }}>
+                <DataGrid
+                    rows={users}
+                    columns={columns}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 5 }
+                        }
+                    }}
+                    pageSizeOptions={[5, 10]}
+                />
+            </div>
+        </>
     );
 };
 
