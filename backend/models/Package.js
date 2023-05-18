@@ -18,11 +18,11 @@ const packageScheme = new mongoose.Schema(
             type: Number,
             required: [true, "Required"],
         },
-        numberPrompt: {
+        numberSubmitRefine: {
             type: Number,
             required: [true, "Required"],
         },
-        numberWord: {
+        numberSubmitFeedback: {
             type: Number,
             required: [true, "Required"],
         },

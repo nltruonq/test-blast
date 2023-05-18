@@ -139,6 +139,14 @@
         min-width: 262px !important;
         max-width: 262px !important;
     }
+    textarea {
+        min-height: 150px;
+    }
+    .group-textarea {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel {

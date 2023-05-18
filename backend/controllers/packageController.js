@@ -17,8 +17,8 @@ const packageController = {
                 description: package.description,
                 price: package.price,
                 time: package.time,
-                numberPrompt: package.numberPrompt,
-                numberWord: package.numberWord,
+                numberSubmitFeedback: package.numberSubmitFeedback,
+                numberSubmitRefine: package.numberSubmitRefine,
             });
 
             const savePackage = await newPackage.save();
@@ -32,6 +32,15 @@ const packageController = {
         try {
             await Package.findByIdAndDelete(packageId);
             return res.status(200).json({ message: "Package deleted" });
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    },
+    updatePackage: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const package = await Package.findByIdAndUpdate(id, { $set: req.body }, { returnDocument: "after" });
+            return res.status(200).json(package);
         } catch (err) {
             return res.status(500).json(err.message);
         }

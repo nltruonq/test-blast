@@ -5,16 +5,39 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 
 import { Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import Modal from 'react-modal';
 
 // project imports
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 import { SERVER_API, AUTHEN } from '../../host/index';
+import { SET_MENU } from 'store/actions';
+import { useDispatch, useSelector } from 'react-redux';
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
+    }
+};
 
 const User = () => {
+    const [modalIsOpen, setIsOpen] = useState(false);
     const [users, setUsers] = useState([]);
     const [packages, setPackages] = useState([]);
+
+    const [infoUser, setInfoUser] = useState({});
+
+    const dispatch = useDispatch();
+    const leftDrawerOpened = useSelector((state) => state.customization.opened);
+    const handleLeftDrawerToggle = () => {
+        dispatch({ type: SET_MENU, opened: leftDrawerOpened === true ? !leftDrawerOpened : leftDrawerOpened });
+    };
 
     const columns = [
         { field: 'id', headerName: 'NO', width: 20 },
@@ -38,6 +61,7 @@ const User = () => {
                 };
 
                 const handleSelect = async (e) => {
+                    e.stopPropagation();
                     const currentRow = params.row;
                     const { value: pkg } = await Swal.fire({
                         title: 'Select package',
@@ -61,6 +85,10 @@ const User = () => {
                                 package: {
                                     packageName: aPackge.name,
                                     packageId: aPackge._id,
+                                    numberSubmitFeedback: aPackge.numberSubmitFeedback,
+                                    numberSubmitRefine: aPackge.numberSubmitRefine,
+                                    amountTokenUsedFeedback: 0,
+                                    amountTokenUsedRefine: 0,
                                     purchase_date: pur_date,
                                     expiration_date: exp_date
                                 }
@@ -77,6 +105,7 @@ const User = () => {
                 };
 
                 const handleEdit = async (e) => {
+                    e.stopPropagation();
                     const currentRow = params.row;
                     let exp;
                     if (currentRow.expiration_date) {
@@ -137,6 +166,7 @@ const User = () => {
                 };
 
                 const handleDelete = (e) => {
+                    e.stopPropagation();
                     const currentRow = params.row;
                     Swal.fire({
                         title: 'Are you sure?',
@@ -177,6 +207,17 @@ const User = () => {
                 );
             }
         }
+    ];
+
+    const columnsInfoUser = [
+        { field: 'id', headerName: 'NO', width: 20 },
+        { field: 'packageName', headerName: 'Package name', width: 130 },
+        { field: 'numberSubmitFeedback', headerName: 'Remaining submit feedback', width: 200 },
+        { field: 'numberSubmitRefine', headerName: 'Remaining submit refine', width: 170 },
+        { field: 'amountTokenUsedFeedback', headerName: 'Token used of feedback', width: 160 },
+        { field: 'amountTokenUsedRefine', headerName: 'Token used of refine', width: 150 },
+        { field: 'purchase_date', headerName: 'Purchase date', width: 120 },
+        { field: 'expiration_date', headerName: 'Expiration date', width: 120 }
     ];
 
     const getAllPackage = async () => {
@@ -224,6 +265,14 @@ const User = () => {
         });
 
         if (formValues) {
+            if (formValues[0] === '' || formValues[1] === '' || formValues[2] === '') {
+                await Swal.fire('Empty field exists!', '', 'error');
+                return;
+            }
+            if (formValues[0].length < 6 || formValues[1].length < 6 || formValues[2].length < 6) {
+                await Swal.fire('Fields with at least 6 characters!', '', 'error');
+                return;
+            }
             const rs = await axios.post(
                 `${SERVER_API}/auth/register`,
                 {
@@ -244,6 +293,22 @@ const User = () => {
         }
     };
 
+    const openModal = async (e) => {
+        handleLeftDrawerToggle();
+        const user = await axios.get(`${SERVER_API}/user/${e.row._id}`, {
+            headers: {
+                Authorization: AUTHEN
+            }
+        });
+        user.data.packages = user.data.packages.map((e, i) => ({ ...e, id: i + 1 }));
+        setInfoUser(user.data);
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+    };
+
     useEffect(() => {
         getAllUser();
         getAllPackage();
@@ -253,7 +318,7 @@ const User = () => {
             <Button onClick={handleCreate} variant="contained" color="primary" size="large">
                 Create
             </Button>
-            <div style={{ height: 600, width: '100%' }}>
+            <div style={{ height: 600, width: '100%', marginTop: 20 }}>
                 <DataGrid
                     rows={users}
                     columns={columns}
@@ -263,8 +328,37 @@ const User = () => {
                         }
                     }}
                     pageSizeOptions={[5, 10]}
+                    onRowClick={(e) => openModal(e)}
+                    // onCellClick={(params, event) => event.stopPropagation()}
+                    sx={{
+                        // disable cell selection style
+                        '.MuiDataGrid-cell:focus': {
+                            outline: 'none'
+                        },
+                        // pointer cursor on ALL rows
+                        '& .MuiDataGrid-row:hover': {
+                            cursor: 'pointer'
+                        }
+                    }}
                 />
             </div>
+            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
+                <DataGrid
+                    rows={infoUser.packages}
+                    columns={columnsInfoUser}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 5 }
+                        }
+                    }}
+                    pageSizeOptions={[5, 10]}
+                    sx={{
+                        '.MuiDataGrid-cell:focus': {
+                            outline: 'none'
+                        }
+                    }}
+                />
+            </Modal>
         </>
     );
 };

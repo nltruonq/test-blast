@@ -19,11 +19,11 @@ const Package = () => {
     const columns = [
         { field: 'id', headerName: 'NO', width: 20 },
         { field: 'name', headerName: 'Name', width: 160 },
-        { field: 'description', headerName: 'Description', width: 200 },
+        { field: 'description', headerName: 'Description', width: 300 },
         { field: 'time', headerName: 'Days Usage', width: 130 },
         { field: 'price', headerName: 'Price', width: 150 },
-        { field: 'numberPrompt', headerName: 'Number of Prompts', width: 150 },
-        { field: 'numberWord', headerName: 'Number of Words', width: 150 },
+        { field: 'numberSubmitFeedback', headerName: 'Number of Feedback', width: 150 },
+        { field: 'numberSubmitRefine', headerName: 'Number of Refine', width: 150 },
         {
             field: 'action',
             headerName: 'Actions',
@@ -38,6 +38,59 @@ const Package = () => {
 
                 const handleEdit = async (e) => {
                     const currentRow = params.row;
+                    const { value: formValues } = await Swal.fire({
+                        title: 'Creating a prompt',
+                        html:
+                            `<label>Name</label><input value=${JSON.stringify(currentRow.name)} id="swal-input1" class="swal2-input">` +
+                            `<div class="group-textarea"><label>Description</label><textarea id="swal-input2" class="swal2-input">${currentRow.description}</textarea></div>` +
+                            `<label>Days usage</label><input value=${JSON.stringify(
+                                currentRow.time
+                            )} type="Number" id="swal-input3" class="swal2-input">` +
+                            `<label>Price</label><input value=${JSON.stringify(
+                                currentRow.price
+                            )} type="Number" id="swal-input4" class="swal2-input">` +
+                            `<label>nFeedback</label><input value=${JSON.stringify(
+                                currentRow.numberSubmitFeedback
+                            )} type="Number" id="swal-input5" class="swal2-input">` +
+                            `<label>nRefine</label><input value=${JSON.stringify(
+                                currentRow.numberSubmitRefine
+                            )} type="Number" id="swal-input6" class="swal2-input">`,
+
+                        focusConfirm: false,
+                        preConfirm: () => {
+                            return [
+                                document.getElementById('swal-input1').value,
+                                document.getElementById('swal-input2').value,
+                                parseInt(document.getElementById('swal-input3').value),
+                                parseInt(document.getElementById('swal-input4').value),
+                                parseInt(document.getElementById('swal-input5').value),
+                                parseInt(document.getElementById('swal-input6').value)
+                            ];
+                        }
+                    });
+
+                    if (formValues) {
+                        const rs = await axios.patch(
+                            `${SERVER_API}/package/${currentRow._id}`,
+                            {
+                                name: formValues[0],
+                                description: formValues[1],
+                                time: formValues[2],
+                                price: formValues[3],
+                                numberSubmitFeedback: formValues[4],
+                                numberSubmitRefine: formValues[5]
+                            },
+                            {
+                                headers: {
+                                    Authorization: AUTHEN
+                                }
+                            }
+                        );
+                        if (rs) {
+                            await Swal.fire('Success!', '', 'success');
+                            window.location.reload(false);
+                        }
+                    }
                 };
 
                 const handleDelete = (e) => {
@@ -65,9 +118,9 @@ const Package = () => {
 
                 return (
                     <Stack direction="row" spacing={2}>
-                        {/* <Button variant="contained" color="warning" size="small" onClick={handleEdit}>
+                        <Button variant="contained" color="warning" size="small" onClick={handleEdit}>
                             Edit
-                        </Button> */}
+                        </Button>
                         <Button variant="contained" color="error" size="small" onClick={handleDelete}>
                             Delete
                         </Button>
@@ -95,11 +148,11 @@ const Package = () => {
             title: 'Creating a package',
             html:
                 '<label>Name</label><input id="swal-input1" class="swal2-input">' +
-                '<label>Description</label><input id="swal-input2" class="swal2-input">' +
+                '<div class="group-textarea"><label class="label-textarea">Description</label><textarea id="swal-input2" class="swal2-input"></textarea></div>' +
                 '<label>Days usage</label><input type="Number" id="swal-input3" class="swal2-input">' +
                 '<label>Price</label><input type="Number" id="swal-input4" class="swal2-input">' +
-                '<label>nPrompt</label><input type="Number" id="swal-input5" class="swal2-input">' +
-                '<label>nWord</label><input type="Number" id="swal-input6" class="swal2-input">',
+                '<label>nFeedback</label><input type="Number" id="swal-input5" class="swal2-input">' +
+                '<label>nRefine</label><input type="Number" id="swal-input6" class="swal2-input">',
             focusConfirm: false,
             preConfirm: () => {
                 return [
@@ -114,6 +167,21 @@ const Package = () => {
         });
 
         if (formValues) {
+            if (
+                formValues[0] === '' ||
+                formValues[1] === '' ||
+                isNaN(formValues[2]) ||
+                isNaN(formValues[3]) ||
+                isNaN(formValues[4]) ||
+                isNaN(formValues[5])
+            ) {
+                await Swal.fire('Empty field exists!', '', 'error');
+                return;
+            }
+            if (formValues[0].length < 6) {
+                await Swal.fire('Name of package at least 6 characters!', '', 'error');
+                return;
+            }
             const rs = await axios.post(
                 `${SERVER_API}/package`,
                 {
@@ -121,8 +189,8 @@ const Package = () => {
                     description: formValues[1],
                     time: formValues[2],
                     price: formValues[3],
-                    numberPrompt: formValues[4],
-                    numberWord: formValues[5]
+                    numberSubmitFeedback: formValues[4],
+                    numberSubmitRefine: formValues[5]
                 },
                 {
                     headers: {

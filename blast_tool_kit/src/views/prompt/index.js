@@ -26,12 +26,12 @@ const Prompt = () => {
     const [type, setType] = useState('');
 
     const columns = [
-        { field: 'id', headerName: 'NO', width: 50 },
+        { field: 'orderBy', headerName: 'Order', width: 60 },
+        // { field: 'id', headerName: 'NO', width: 50 },
         { field: 'feature', headerName: 'Feature', width: 150 },
         { field: 'band', headerName: 'Band', width: 60 },
-        { field: 'content', headerName: 'Content', width: 360 },
+        { field: 'content', headerName: 'Content', width: 450 },
         { field: 'fullType', headerName: 'Type', width: 240 },
-        { field: 'orderBy', headerName: 'Order', width: 100 },
         {
             field: 'action',
             headerName: 'Actions',
@@ -61,9 +61,7 @@ const Prompt = () => {
                                         e
                                     )}>${e}</option>`
                             )}</select>` +
-                            `<label>Content</label><input value=${JSON.stringify(
-                                currentRow.content
-                            )} id="swal-input3" class="swal2-input">` +
+                            `<div class="group-textarea"><label>Content</label><textarea id="swal-input3" class="swal2-input">${currentRow.content}</textarea></div>` +
                             `<label>Type</label><select id="swal-input4" class="swal2-input">${menu?.type?.map(
                                 (e, i) =>
                                     `<option ${e.split(' ').join('') === currentRow.type ? 'selected' : ''} value=${JSON.stringify(
@@ -88,7 +86,7 @@ const Prompt = () => {
                         const rs = await axios.patch(
                             `${SERVER_API}/prompt/${currentRow._id}`,
                             {
-                                feature: formValues[0],
+                                feature: formValues[0].split(' ').join(''),
                                 band: formValues[1],
                                 content: formValues[2],
                                 type:
@@ -187,7 +185,7 @@ const Prompt = () => {
                 `<label>Band</label><select id="swal-input2" class="swal2-input">${menu?.band?.map(
                     (e, i) => `<option value=${JSON.stringify(e)}>${e}</option>`
                 )}</select>` +
-                '<label>Content</label><input id="swal-input3" class="swal2-input">' +
+                '<div class="group-textarea"><label>Content</label><textarea id="swal-input3" class="swal2-input"></textarea></div>' +
                 `<label>Type</label><select id="swal-input4" class="swal2-input">${menu?.type?.map(
                     (e, i) => `<option value=${JSON.stringify(e)}>${e}</option>`
                 )}</select>` +
@@ -208,7 +206,7 @@ const Prompt = () => {
             const rs = await axios.post(
                 `${SERVER_API}/prompt`,
                 {
-                    feature: formValues[0],
+                    feature: formValues[0].split(' ').join(''),
                     band: formValues[1],
                     content: formValues[2],
                     fullType: formValues[3],
