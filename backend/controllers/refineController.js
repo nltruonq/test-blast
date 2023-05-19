@@ -11,7 +11,7 @@ const refineController = {
             const response = await openai.createChatCompletion({
                 model: "gpt-4",
                 messages: [
-                    { role: "user", content: promptOne },
+                    { role: "system", content: promptOne },
                     { role: "user", content: promptTwo },
                 ],
                 temperature: 0,
@@ -37,8 +37,8 @@ const refineController = {
             const response = await openai.createChatCompletion({
                 model: "gpt-4",
                 messages: [
-                    { role: "user", content: promptOne },
-                    { role: "user", content: promptTwo },
+                    { role: "system", content: promptOne },
+                    { role: "system", content: promptTwo },
                     { role: "user", content: promptAnalyse },
                 ],
                 temperature: 0,
