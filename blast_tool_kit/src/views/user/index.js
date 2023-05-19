@@ -255,7 +255,23 @@ const User = () => {
                 `<label>Password</label><input id="swal-input2" class="swal2-input">` +
                 '<label>Email</label><input id="swal-input3" class="swal2-input">',
             focusConfirm: false,
-            preConfirm: () => {
+            preConfirm: async () => {
+                if (
+                    document.getElementById('swal-input1').value === '' ||
+                    document.getElementById('swal-input2').value === '' ||
+                    document.getElementById('swal-input3').value === ''
+                ) {
+                    await Swal.showValidationMessage('Empty field exists!', '', 'error');
+                    return;
+                }
+                if (
+                    document.getElementById('swal-input1').value.length < 6 ||
+                    document.getElementById('swal-input2').value.length < 6 ||
+                    document.getElementById('swal-input3').value.length < 6
+                ) {
+                    await Swal.showValidationMessage('Fields with at least 6 characters!', '', 'error');
+                    return;
+                }
                 return [
                     document.getElementById('swal-input1').value,
                     document.getElementById('swal-input2').value,
@@ -265,14 +281,6 @@ const User = () => {
         });
 
         if (formValues) {
-            if (formValues[0] === '' || formValues[1] === '' || formValues[2] === '') {
-                await Swal.fire('Empty field exists!', '', 'error');
-                return;
-            }
-            if (formValues[0].length < 6 || formValues[1].length < 6 || formValues[2].length < 6) {
-                await Swal.fire('Fields with at least 6 characters!', '', 'error');
-                return;
-            }
             const rs = await axios.post(
                 `${SERVER_API}/auth/register`,
                 {

@@ -6,7 +6,7 @@ const { sendMail, templateVerifyEmail } = require("../utils/mailer");
 const authController = {
     //REGISTER
     registerUser: async (req, res) => {
-        if (req.body.password.length > 6) {
+        if (req.body?.password?.length > 6) {
             try {
                 const salt = await bcrypt.genSalt(10);
                 const hashed = await bcrypt.hash(req.body.password, salt);

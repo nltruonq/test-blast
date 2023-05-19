@@ -154,7 +154,22 @@ const Package = () => {
                 '<label>nFeedback</label><input type="Number" id="swal-input5" class="swal2-input">' +
                 '<label>nRefine</label><input type="Number" id="swal-input6" class="swal2-input">',
             focusConfirm: false,
-            preConfirm: () => {
+            preConfirm: async () => {
+                if (
+                    document.getElementById('swal-input1').value === '' ||
+                    document.getElementById('swal-input2').value === '' ||
+                    isNaN(parseInt(document.getElementById('swal-input3').value)) ||
+                    isNaN(parseInt(document.getElementById('swal-input4').value)) ||
+                    isNaN(parseInt(document.getElementById('swal-input5').value)) ||
+                    isNaN(parseInt(document.getElementById('swal-input6').value))
+                ) {
+                    await Swal.showValidationMessage('Empty field exists!', '', 'error');
+                    return;
+                }
+                if (document.getElementById('swal-input1').value.length < 6) {
+                    await Swal.showValidationMessage('Name of package at least 6 characters!', '', 'error');
+                    return;
+                }
                 return [
                     document.getElementById('swal-input1').value,
                     document.getElementById('swal-input2').value,
@@ -167,21 +182,6 @@ const Package = () => {
         });
 
         if (formValues) {
-            if (
-                formValues[0] === '' ||
-                formValues[1] === '' ||
-                isNaN(formValues[2]) ||
-                isNaN(formValues[3]) ||
-                isNaN(formValues[4]) ||
-                isNaN(formValues[5])
-            ) {
-                await Swal.fire('Empty field exists!', '', 'error');
-                return;
-            }
-            if (formValues[0].length < 6) {
-                await Swal.fire('Name of package at least 6 characters!', '', 'error');
-                return;
-            }
             const rs = await axios.post(
                 `${SERVER_API}/package`,
                 {

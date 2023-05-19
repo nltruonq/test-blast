@@ -7,6 +7,7 @@ const routes = (app) => {
     app.use("/api/refine", require("./refine"));
     app.use("/api/menu", require("./menu"));
     app.use("/api/student", require("./student"));
+    app.use("/api/mail", require("./mail"));
 };
 
 module.exports = routes;

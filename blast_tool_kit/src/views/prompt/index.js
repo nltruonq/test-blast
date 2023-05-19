@@ -191,7 +191,17 @@ const Prompt = () => {
                 )}</select>` +
                 '<label>Order</label><input type="Number" id="swal-input5" class="swal2-input">',
             focusConfirm: false,
-            preConfirm: () => {
+            preConfirm: async () => {
+                if (
+                    document.getElementById('swal-input1').value === '' ||
+                    document.getElementById('swal-input2').value === '' ||
+                    document.getElementById('swal-input3').value === '' ||
+                    document.getElementById('swal-input4').value === '' ||
+                    isNaN(parseInt(document.getElementById('swal-input5').value))
+                ) {
+                    await Swal.showValidationMessage('Empty field exists!', '', 'error');
+                    return;
+                }
                 return [
                     document.getElementById('swal-input1').value,
                     document.getElementById('swal-input2').value,
