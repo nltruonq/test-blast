@@ -12,13 +12,16 @@ const menuController = {
             const menu = await Menu.find({});
             menu.forEach((e, i) => {
                 if (e.getBy === "feature") {
-                    result['feature'] = e["feature"];
+                    result["feature"] = e["feature"];
                 }
                 if (e.getBy === "band") {
-                    result['band'] = e["band"];
+                    result["band"] = e["band"];
                 }
                 if (e.getBy === "type") {
-                    result['type'] = e["type"];
+                    result["type"] = e["type"];
+                }
+                if (e.getBy === "nav") {
+                    result["nav"] = e["nav"];
                 }
             });
             return res.status(200).json(result);
@@ -45,6 +48,12 @@ const menuController = {
                 getBy: "type",
             });
             await type.save();
+
+            const nav = new Menu({
+                nav: ["Feedback 1", "Feedback 2", "Refine", "Contact", "Logout"],
+                getBy: "nav",
+            });
+            await nav.save();
 
             return res.status(200).json({ message: "success!" });
         } catch (err) {

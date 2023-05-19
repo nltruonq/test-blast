@@ -1,4 +1,5 @@
 const configOPENAI = require("../configs/openAI");
+const Prompt = require("../models/Prompt");
 
 const feedbackController = {
     CallApi: async (req, res, next) => {
@@ -9,7 +10,7 @@ const feedbackController = {
             const response = await openai.createChatCompletion({
                 model: "gpt-3.5-turbo",
                 messages: [
-                    { role: "user", content: promptOne },
+                    { role: "system", content: promptOne },
                     { role: "user", content: options },
                 ],
                 temperature: 0.5,
@@ -23,6 +24,15 @@ const feedbackController = {
             });
         } catch (error) {
             res.status(500).json("Something went wrong");
+        }
+    },
+    getPromptFeedback: async (req, res) => {
+        try {
+            const q = req.query;
+            const prompts = await Prompt.find(q);
+            return res.status(200).json(prompts);
+        } catch (err) {
+            return res.status(500).json(err.message);
         }
     },
 };

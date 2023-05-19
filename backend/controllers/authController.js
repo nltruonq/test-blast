@@ -129,7 +129,6 @@ const authController = {
             });
             res.status(200).json({
                 accessToken: newAccessToken,
-                refreshToken: newRefreshToken,
             });
         });
     },

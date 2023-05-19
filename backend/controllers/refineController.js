@@ -1,5 +1,7 @@
 const configOPENAI = require("../configs/openAI");
 
+const Prompt = require("../models/Prompt");
+
 const refineController = {
     CallApi: async (req, res, next) => {
         try {
@@ -83,6 +85,14 @@ const refineController = {
         } catch (error) {
             console.log(error);
             res.status(500).json("Something went wrong");
+        }
+    },
+    getPromptRefine: async (req, res) => {
+        try {
+            const prompts = await Prompt.find({ feature: "refine" });
+            return res.status(200).json(prompts);
+        } catch (err) {
+            return res.status(500).json(err.message);
         }
     },
 };

@@ -5,6 +5,7 @@ const menuSchema = new mongoose.Schema(
         feature: [],
         band: [],
         type: [],
+        nav: [],
         getBy: {
             type: String,
         },
