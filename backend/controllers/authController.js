@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { getAuth } = require("firebase-admin/auth");
-const { sendMail, templateVerifyEmail } = require("../utils/mailer");
+const { sendMail, templateVerifyEmail, templateLoginFirstTimeEmail } = require("../utils/mailer");
 
 const authController = {
     //REGISTER
@@ -94,6 +94,7 @@ const authController = {
 
                         //Save user to DB
                         user = await newUser.save();
+                        sendMail(req.body.email, "BLAST", templateLoginFirstTimeEmail(decodedToken.name));
                     }
                     //Generate access token
                     const accessToken = authController.generateAccessToken(user);

@@ -45,4 +45,13 @@ const templateFeedbackEmail = (
 <p>Hi, I'm ${email},</p>
 <p>${content}</p>`;
 
-module.exports = { sendMail, templateVerifyEmail, templateFeedbackEmail };
+const templateLoginFirstTimeEmail = (
+    name
+) => `<div style="font-family:'Open Sans','Roboto','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;color:#2c3e50;line-height:150%;letter-spacing:normal">
+<div style="background:#f9f9f9;padding:20px 10px">
+<div style="max-width:600px;margin:auto;padding:15px 30px 25px 30px;background-color:#ffffff;border-radius:3px;border-bottom:1px solid #dadada;border-top:1px solid #eaeaea">
+<div style="margin:5px 0 30px"><span style="color:#2c3e50;font-size:22px;margin-left:8px;font-weight:700">BLAST</span></a></div>
+<p>Xin chào ${name}!</p>
+<p>Chào mừng bạn đến với BLAST</p>`;
+
+module.exports = { sendMail, templateVerifyEmail, templateFeedbackEmail, templateLoginFirstTimeEmail };
