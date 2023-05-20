@@ -1,9 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const admin = require("firebase-admin");
 const { getAuth } = require("firebase-admin/auth");
-const serviceAccount = require("../configs/firebaseCredential.json");
 const { sendMail, templateVerifyEmail } = require("../utils/mailer");
 
 const authController = {
@@ -74,9 +72,6 @@ const authController = {
     //LOGIN
     loginUser: async (req, res) => {
         try {
-            admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount),
-            });
             const { idToken, email } = req.body;
             if (!idToken || !email) {
                 return res.status(401).json({ message: "You are not authenticated" });

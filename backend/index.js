@@ -5,6 +5,13 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 
+//firebase
+const admin = require("firebase-admin");
+const serviceAccount = require("./configs/firebaseCredential.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
+
 mongoose
     .connect(process.env.DB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
