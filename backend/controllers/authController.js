@@ -82,7 +82,7 @@ const authController = {
                     if (decodedToken.email !== email) {
                         return res.status(401).json({ message: "You are not authenticated!" });
                     }
-                    const user = await User.findOne({ email: req.body.email });
+                    let user = await User.findOne({ email: req.body.email });
                     if (!user) {
                         const newUser = new User({
                             email: req.body.email,
@@ -92,7 +92,7 @@ const authController = {
                         });
 
                         //Save user to DB
-                        const user = await newUser.save();
+                        user = await newUser.save();
                     }
                     //Generate access token
                     const accessToken = authController.generateAccessToken(user);
