@@ -4,20 +4,46 @@ import iconArrow from 'assets/images/icons/arrow.svg';
 import { Button, Form, FormGroup, Input, Label, NavLink } from 'reactstrap';
 import { useState } from 'react';
 import logo from 'assets/logo/logo-1.svg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import bgOne from 'assets/images/bgs/login-1.svg';
 import bgTwo from 'assets/images/bgs/login-2.svg';
+import axios from 'axios';
+import { SERVER_API } from 'host';
+import Swal from 'sweetalert2';
 
 function Login() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
 
     const handleChangleUserName = (e) => {
         setUserName(e.target.value);
     };
     const handlechanglePassword = (e) => {
         setPassword(e.target.value);
+    };
+
+    const handleLoginAdmin = async () => {
+        try {
+            const rs = await axios.post(
+                `${SERVER_API}/auth/loginadmin`,
+                {
+                    username: userName,
+                    password: password
+                },
+                {
+                    withCredentials: true
+                }
+            );
+            if (rs) {
+                localStorage.setItem('blast-user', JSON.stringify(rs.data));
+                navigate('/');
+            }
+        } catch (err) {
+            await Swal.fire(`Username or password incorrect`, ``, 'error');
+        }
     };
     return (
         <div
@@ -65,7 +91,9 @@ function Login() {
                                 <Button className="format-btn btn-back">
                                     <NavLink>Back</NavLink>
                                 </Button>
-                                <Button className="format-btn btn-submit">Sign in</Button>
+                                <Button onClick={handleLoginAdmin} className="format-btn btn-submit">
+                                    Sign in
+                                </Button>
                             </FormGroup>
                         </Form>
                     </div>

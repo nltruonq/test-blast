@@ -54,7 +54,7 @@ const authController = {
                 isAdmin: user.isAdmin,
             },
             process.env.JWT_KEY,
-            { expiresIn: "7d" }
+            { expiresIn: "5s" }
         );
     },
 
@@ -65,7 +65,7 @@ const authController = {
                 isAdmin: user.isAdmin,
             },
             process.env.JWT_REFRESH_KEY,
-            { expiresIn: "365d" }
+            { expiresIn: "7d" }
         );
     },
 
@@ -105,7 +105,7 @@ const authController = {
                         httpOnly: true,
                         secure: false,
                         path: "/",
-                        sameSite: "none",
+                        sameSite: "strict",
                     });
                     const { password, ...resUser } = user._doc;
                     const returnedUser = {
@@ -117,6 +117,40 @@ const authController = {
                 .catch((err) => {
                     return res.status(500).json(err.message);
                 });
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    },
+
+    //LOGIN ADMIN
+    loginAdmin: async (req, res) => {
+        try {
+            const user = await User.findOne({ username: req.body.username }).select("+password");
+            if (!user) {
+                return res.status(404).json({ message: "Incorrect username" });
+            }
+            const validPassword = await bcrypt.compare(req.body.password, user.password);
+            if (!validPassword) {
+                return res.status(404).json({ message: "Incorrect password" });
+            } else if (user && validPassword) {
+                //Generate access token
+                const accessToken = authController.generateAccessToken(user);
+                //Generate refresh token
+                const refreshToken = authController.generateRefreshToken(user);
+                //STORE REFRESH TOKEN IN COOKIE
+                res.cookie("refreshToken", refreshToken, {
+                    httpOnly: true,
+                    secure: false,
+                    path: "/",
+                    sameSite: "strict",
+                });
+                const { password, ...resUser } = user._doc;
+                const returnedUser = {
+                    ...resUser,
+                    accessToken: accessToken,
+                };
+                return res.status(200).json(returnedUser);
+            }
         } catch (err) {
             return res.status(500).json(err);
         }
@@ -135,11 +169,11 @@ const authController = {
             //create new access token, refresh token and send to user
             const newAccessToken = authController.generateAccessToken(user);
             const newRefreshToken = authController.generateRefreshToken(user);
-            res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", newRefreshToken, {
                 httpOnly: true,
                 secure: false,
                 path: "/",
-                // sameSite: "strict",
+                sameSite: "strict",
             });
             res.status(200).json({
                 accessToken: newAccessToken,
@@ -150,8 +184,12 @@ const authController = {
     //LOG OUT
     logOut: async (req, res) => {
         //Clear cookies when user logs out
-        res.clearCookie("refreshToken");
-        return res.status(200).json({ message: "Logged out successfully!" });
+        try {
+            res.clearCookie("refreshToken");
+            return res.status(200).json({ message: "Logged out successfully!" });
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
     },
 };
 

@@ -38,6 +38,9 @@ import User1 from 'assets/images/users/user-round.svg';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
+import axios from 'axios';
+import { createAxios } from '../../../../axios/axiosInstance';
+import { AUTHEN, SERVER_API } from 'host';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -56,7 +59,21 @@ const ProfileSection = () => {
      * */
     const anchorRef = useRef(null);
     const handleLogout = async () => {
-        console.log('Logout');
+        const user = JSON.parse(localStorage.getItem('blast-user'));
+        let axiosInstance = createAxios(user);
+        const rs = axiosInstance.post(
+            `${SERVER_API}/auth/logout`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${user.accessToken}`
+                }
+            }
+        );
+        if (rs) {
+            localStorage.removeItem('blast-user');
+            navigate('/login');
+        }
     };
 
     const handleClose = (event) => {

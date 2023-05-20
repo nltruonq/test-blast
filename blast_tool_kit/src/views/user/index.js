@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import { SERVER_API, AUTHEN } from '../../host/index';
 import { SET_MENU } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
+import { createAxios } from '../../axios/axiosInstance';
 
 const customStyles = {
     content: {
@@ -32,6 +33,10 @@ const User = () => {
     const [packages, setPackages] = useState([]);
 
     const [infoUser, setInfoUser] = useState({});
+
+    let user = JSON.parse(localStorage.getItem('blast-user'));
+
+    let axiosJWT = createAxios(user);
 
     const dispatch = useDispatch();
     const leftDrawerOpened = useSelector((state) => state.customization.opened);
@@ -78,7 +83,7 @@ const User = () => {
                         const pur_date = new Date(Date.now()).toLocaleDateString();
                         let exp_date = new Date(Date.now());
                         exp_date = new Date(exp_date.setDate(exp_date.getDate() + parseInt(aPackge.time))).toLocaleDateString();
-                        await axios.patch(
+                        await axiosJWT.patch(
                             `${SERVER_API}/user/add_package`,
                             {
                                 username: currentRow.username,
@@ -95,7 +100,7 @@ const User = () => {
                             },
                             {
                                 headers: {
-                                    Authorization: AUTHEN
+                                    Authorization: `Bearer ${user.accessToken}`
                                 }
                             }
                         );
@@ -147,7 +152,7 @@ const User = () => {
                     });
 
                     if (formValues) {
-                        const rs = await axios.patch(
+                        const rs = await axiosJWT.patch(
                             `${SERVER_API}/user/${currentRow._id}`,
                             {
                                 username: formValues[0],
@@ -156,7 +161,7 @@ const User = () => {
                             },
                             {
                                 headers: {
-                                    Authorization: AUTHEN
+                                    Authorization: `Bearer ${user.accessToken}`
                                 }
                             }
                         );
@@ -178,9 +183,9 @@ const User = () => {
                         confirmButtonText: 'Yes, delete it!'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            await axios.delete(`${SERVER_API}/user/${currentRow._id}`, {
+                            await axiosJWT.delete(`${SERVER_API}/user/${currentRow._id}`, {
                                 headers: {
-                                    Authorization: AUTHEN
+                                    Authorization: `Bearer ${user.accessToken}`
                                 },
                                 data: {
                                     userId: currentRow._id
@@ -221,18 +226,18 @@ const User = () => {
     ];
 
     const getAllPackage = async () => {
-        const data = await axios.get(`${SERVER_API}/package/all`, {
+        const data = await axiosJWT.get(`${SERVER_API}/package/all`, {
             headers: {
-                Authorization: AUTHEN
+                Authorization: `Bearer ${user.accessToken}`
             }
         });
         setPackages(data.data);
     };
 
     const getAllUser = async () => {
-        const data = await axios.get(`${SERVER_API}/user/all`, {
+        const data = await axiosJWT.get(`${SERVER_API}/user/all`, {
             headers: {
-                Authorization: AUTHEN
+                Authorization: `Bearer ${user.accessToken}`
             }
         });
         data.data = data.data.map((e, i) => ({
@@ -281,7 +286,7 @@ const User = () => {
         });
 
         if (formValues) {
-            const rs = await axios.post(
+            const rs = await axiosJWT.post(
                 `${SERVER_API}/auth/register`,
                 {
                     username: formValues[0],
@@ -290,7 +295,7 @@ const User = () => {
                 },
                 {
                     headers: {
-                        Authorization: AUTHEN
+                        Authorization: `Bearer ${user.accessToken}`
                     }
                 }
             );
@@ -303,9 +308,9 @@ const User = () => {
 
     const openModal = async (e) => {
         handleLeftDrawerToggle();
-        const user = await axios.get(`${SERVER_API}/user/${e.row._id}`, {
+        const user = await axiosJWT.get(`${SERVER_API}/user/${e.row._id}`, {
             headers: {
-                Authorization: AUTHEN
+                Authorization: `Bearer ${user.accessToken}`
             }
         });
         user.data.packages = user.data.packages.map((e, i) => ({ ...e, id: i + 1 }));
@@ -318,8 +323,11 @@ const User = () => {
     };
 
     useEffect(() => {
-        getAllUser();
-        getAllPackage();
+        user = JSON.parse(localStorage.getItem('blast-user'));
+        if (user) {
+            getAllUser();
+            getAllPackage();
+        }
     }, []);
     return (
         <>

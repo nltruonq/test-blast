@@ -159,8 +159,7 @@ const userController = {
     //UPDATE A USER FOR ADMIN
     updateUserForAdmin: async (req, res) => {
         try {
-            console.log(req.body);
-            const user = await User.findOneAndUpdate(
+            let user = await User.findOneAndUpdate(
                 { _id: req.params.id },
                 {
                     $set: { username: req.body.username, email: req.body.email },

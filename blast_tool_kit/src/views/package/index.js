@@ -9,12 +9,16 @@ import { Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, 
 // project imports
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { createAxios } from '../../axios/axiosInstance';
 
 import { SERVER_API, AUTHEN } from '../../host/index';
 
 const Package = () => {
     const [users, setUsers] = useState([]);
     const [packages, setPackages] = useState([]);
+
+    let user = JSON.parse(localStorage.getItem('blast-user'));
+    let axiosJWT = createAxios(user);
 
     const columns = [
         { field: 'id', headerName: 'NO', width: 20 },
@@ -70,7 +74,7 @@ const Package = () => {
                     });
 
                     if (formValues) {
-                        const rs = await axios.patch(
+                        const rs = await axiosJWT.patch(
                             `${SERVER_API}/package/${currentRow._id}`,
                             {
                                 name: formValues[0],
@@ -82,7 +86,7 @@ const Package = () => {
                             },
                             {
                                 headers: {
-                                    Authorization: AUTHEN
+                                    Authorization: `Bearer ${user.accessToken}`
                                 }
                             }
                         );
@@ -105,9 +109,9 @@ const Package = () => {
                         confirmButtonText: 'Yes, delete it!'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            await axios.delete(`${SERVER_API}/package/${currentRow._id}`, {
+                            await axiosJWT.delete(`${SERVER_API}/package/${currentRow._id}`, {
                                 headers: {
-                                    Authorization: AUTHEN
+                                    Authorization: `Bearer ${user.accessToken}`
                                 }
                             });
                             await Swal.fire('Deleted!', 'This package has been deleted.', 'success');
@@ -131,9 +135,9 @@ const Package = () => {
     ];
 
     const getAllPackage = async () => {
-        const data = await axios.get(`${SERVER_API}/package/all`, {
+        const data = await axiosJWT.get(`${SERVER_API}/package/all`, {
             headers: {
-                Authorization: AUTHEN
+                Authorization: `Bearer ${user.accessToken}`
             }
         });
         data.data = data.data.map((e, i) => ({
@@ -182,7 +186,7 @@ const Package = () => {
         });
 
         if (formValues) {
-            const rs = await axios.post(
+            const rs = await axiosJWT.post(
                 `${SERVER_API}/package`,
                 {
                     name: formValues[0],
@@ -194,7 +198,7 @@ const Package = () => {
                 },
                 {
                     headers: {
-                        Authorization: AUTHEN
+                        Authorization: `Bearer ${user.accessToken}`
                     }
                 }
             );
@@ -206,7 +210,10 @@ const Package = () => {
     };
 
     useEffect(() => {
-        getAllPackage();
+        user = JSON.parse(localStorage.getItem('blast-user'));
+        if (user) {
+            getAllPackage();
+        }
     }, []);
     return (
         <>

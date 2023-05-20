@@ -14,6 +14,7 @@ import { Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, 
 // project imports
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { createAxios } from '../../axios/axiosInstance';
 
 import { SERVER_API, AUTHEN } from '../../host/index';
 
@@ -24,6 +25,9 @@ const Prompt = () => {
     const [feature, setFeature] = useState('');
     const [band, setBand] = useState('');
     const [type, setType] = useState('');
+
+    let user = JSON.parse(localStorage.getItem('blast-user'));
+    let axiosJWT = createAxios(user);
 
     const columns = [
         { field: 'orderBy', headerName: 'Order', width: 60 },
@@ -83,7 +87,7 @@ const Prompt = () => {
 
                     if (formValues) {
                         console.log(currentRow._id);
-                        const rs = await axios.patch(
+                        const rs = await axiosJWT.patch(
                             `${SERVER_API}/prompt/${currentRow._id}`,
                             {
                                 feature: formValues[0].split(' ').join(''),
@@ -102,7 +106,7 @@ const Prompt = () => {
                             },
                             {
                                 headers: {
-                                    Authorization: AUTHEN
+                                    Authorization: `Bearer ${user.accessToken}`
                                 }
                             }
                         );
@@ -125,9 +129,9 @@ const Prompt = () => {
                         confirmButtonText: 'Yes, delete it!'
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            await axios.delete(`${SERVER_API}/prompt/${currentRow._id}`, {
+                            await axiosJWT.delete(`${SERVER_API}/prompt/${currentRow._id}`, {
                                 headers: {
-                                    Authorization: AUTHEN
+                                    Authorization: `Bearer ${user.accessToken}`
                                 }
                             });
                             await Swal.fire('Deleted!', 'This prompt has been deleted.', 'success');
@@ -151,9 +155,9 @@ const Prompt = () => {
     ];
 
     const getAllPrompts = async () => {
-        const data = await axios.get(`${SERVER_API}/prompt`, {
+        const data = await axiosJWT.get(`${SERVER_API}/prompt`, {
             headers: {
-                Authorization: AUTHEN
+                Authorization: `Bearer ${user.accessToken}`
             }
         });
         data.data = data.data.map((e, i) => ({
@@ -164,9 +168,9 @@ const Prompt = () => {
     };
 
     const getMenu = async () => {
-        const data = await axios.get(`${SERVER_API}/menu`, {
+        const data = await axiosJWT.get(`${SERVER_API}/menu`, {
             headers: {
-                Authorization: AUTHEN
+                Authorization: `Bearer ${user.accessToken}`
             }
         });
         setMenu(data.data);
@@ -213,7 +217,7 @@ const Prompt = () => {
         });
 
         if (formValues) {
-            const rs = await axios.post(
+            const rs = await axiosJWT.post(
                 `${SERVER_API}/prompt`,
                 {
                     feature: formValues[0].split(' ').join(''),
@@ -224,7 +228,7 @@ const Prompt = () => {
                 },
                 {
                     headers: {
-                        Authorization: AUTHEN
+                        Authorization: `Bearer ${user.accessToken}`
                     }
                 }
             );
@@ -246,8 +250,11 @@ const Prompt = () => {
     };
 
     useEffect(() => {
-        getAllPrompts();
-        getMenu();
+        user = JSON.parse(localStorage.getItem('blast-user'));
+        if (user) {
+            getAllPrompts();
+            getMenu();
+        }
     }, []);
     return (
         <>
