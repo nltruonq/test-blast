@@ -7,10 +7,10 @@ const userSchema = new mongoose.Schema(
     {
         username: {
             type: String,
-            required: [true, "Required"],
-            minlength: [6, "Must be at least 6 characters"],
-            maxlength: [20, "Must be less than 20 characters"],
-            unique: true,
+            // required: [true, "Required"],
+            // minlength: [6, "Must be at least 6 characters"],
+            // maxlength: [20, "Must be less than 20 characters"],
+            // unique: true,
         },
         displayName: {
             type: String,
@@ -29,9 +29,9 @@ const userSchema = new mongoose.Schema(
         },
         password: {
             type: String,
-            required: [true, "Required"],
+            // required: [true, "Required"],
             select: false,
-            minlength: [8, "Must be 8 characters or more"],
+            // minlength: [8, "Must be 8 characters or more"],
         },
         isAdmin: {
             type: Boolean,
