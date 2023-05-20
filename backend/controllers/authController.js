@@ -85,6 +85,7 @@ const authController = {
                     let user = await User.findOne({ email: req.body.email });
                     if (!user) {
                         const newUser = new User({
+                            username: req.body.email,
                             email: req.body.email,
                             displayName: decodedToken.name,
                             profilePicture: decodedToken.picture,
