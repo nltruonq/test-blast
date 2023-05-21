@@ -8,7 +8,7 @@ const middlewareController = require("../controllers/middlewareController");
 router.patch("/:id", middlewareController.verifyTokenAndAdmin, packageController.updatePackage);
 
 //get all package
-router.get("/all", middlewareController.verifyTokenAndAdmin, packageController.getAllPackage);
+router.get("/all", packageController.getAllPackage);
 
 //add new package
 router.post("/", middlewareController.verifyTokenAndAdmin, packageController.addPackage);
