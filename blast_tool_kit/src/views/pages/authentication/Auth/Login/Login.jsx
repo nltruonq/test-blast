@@ -61,7 +61,7 @@ function Login() {
                         <img src={logo} alt="logo" />
                     </div>
                     <div className="form-content">
-                        <Form>
+                        <Form onSubmit={(e) => e.preventDefault()}>
                             <FormGroup>
                                 <Label for="userName">UserName</Label>
                                 <Input
