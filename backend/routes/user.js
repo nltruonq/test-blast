@@ -8,7 +8,9 @@ router.get("/all", middlewareController.verifyTokenAndAdmin, userController.getA
 //GET USERS HAVE USAGE PACKAGE 3 DAYS LEFT
 router.get("/3days", middlewareController.verifyTokenAndAdmin, userController.findUserHasUsagePackage);
 //GET the package currently being used by a user
-router.get("/currently/:id", userController.findPackageCurrentlyUse);
+router.get("/currently/:id", middlewareController.verifyTokenAndUserAuthorization, userController.findPackageCurrentlyUse);
+//GET the package currently being used by a user
+router.get("/unexpired/:id", middlewareController.verifyTokenAndUserAuthorization, userController.findAllPackagesUnexpired);
 //GET A USER
 router.get("/:id", middlewareController.verifyToken, userController.getUser);
 

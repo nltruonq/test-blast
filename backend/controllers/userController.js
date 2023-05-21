@@ -145,6 +145,39 @@ const userController = {
                         return e;
                     }
                 });
+                if (pkgs.length > 0) {
+                    for (let i = 0; i < pkgs.length - 1; i++) {
+                        pkgs[pkgs.length - 1].numberSubmitFeedback += pkgs[i].numberSubmitFeedback;
+                        pkgs[pkgs.length - 1].numberSubmitRefine += pkgs[i].numberSubmitRefine;
+                    }
+                    return res.status(200).json(pkgs[pkgs.length - 1]);
+                }
+                return res.status(200).json(pkgs);
+            } else {
+                return res.status(200).json([]);
+                
+            }
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    },
+
+    //Find all find all unexpired packages of user
+    findAllPackagesUnexpired: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const packagesUser = await User.findOne({ _id: id }).select("packages");
+            if (packagesUser.packages.length > 0) {
+                const now = new Date(Date.now());
+                const day = now.getDate();
+                const month = now.getMonth() + 1;
+                const year = now.getFullYear();
+                let pkgs = packagesUser.packages.filter((e, i) => {
+                    const [d, m, y] = e.expiration_date.split("/");
+                    if (new Date(`${y}-${m}-${d}`) > now || (parseInt(d) === day && parseInt(m) === month && parseInt(y) === year)) {
+                        return e;
+                    }
+                });
                 return res.status(200).json(pkgs);
             } else {
                 return res.status(200).json([]);

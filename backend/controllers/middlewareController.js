@@ -20,7 +20,7 @@ const middlewareController = {
   },
   verifyTokenAndUserAuthorization: (req, res, next) => {
     middlewareController.verifyToken(req, res, () => {
-      if (req.user.id === req.params.id.trim() || req.user.isAdmin) {
+      if (req.user._id === req.params.id.trim() || req.user.isAdmin) {
         next();
       } else {
         return res.status(403).json("You're not allowed to do that!");
