@@ -170,8 +170,8 @@ const Package = () => {
                     await Swal.showValidationMessage('Empty field exists!', '', 'error');
                     return;
                 }
-                if (document.getElementById('swal-input1').value.length < 6) {
-                    await Swal.showValidationMessage('Name of package at least 6 characters!', '', 'error');
+                if (document.getElementById('swal-input1').value.length < 4) {
+                    await Swal.showValidationMessage('Name of package at least 4 characters!', '', 'error');
                     return;
                 }
                 return [
