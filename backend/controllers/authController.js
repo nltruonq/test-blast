@@ -103,9 +103,9 @@ const authController = {
                     //STORE REFRESH TOKEN IN COOKIE
                     res.cookie("refreshToken", refreshToken, {
                         httpOnly: true,
-                        secure: false,
+                        secure: true,
                         path: "/",
-                        sameSite: "strict",
+                        sameSite: "none",
                     });
                     const { password, ...resUser } = user._doc;
                     const returnedUser = {
@@ -140,9 +140,9 @@ const authController = {
                 //STORE REFRESH TOKEN IN COOKIE
                 res.cookie("refreshToken", refreshToken, {
                     httpOnly: true,
-                    secure: false,
+                    secure: true,
                     path: "/",
-                    sameSite: "strict",
+                    sameSite: "none",
                 });
                 const { password, ...resUser } = user._doc;
                 const returnedUser = {
@@ -171,9 +171,9 @@ const authController = {
             const newRefreshToken = authController.generateRefreshToken(user);
             res.cookie("refreshToken", newRefreshToken, {
                 httpOnly: true,
-                secure: false,
+                secure: true,
                 path: "/",
-                sameSite: "strict",
+                sameSite: "none",
             });
             res.status(200).json({
                 accessToken: newAccessToken,
