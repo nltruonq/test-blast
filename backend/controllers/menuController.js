@@ -53,23 +53,23 @@ const menuController = {
                 nav: [
                     {
                         name: "Feedback 1",
-                        path: "feedbackone",
+                        path: "/feedbackone",
                     },
                     {
                         name: "Feedback 2",
-                        path: "feedbacktwo",
+                        path: "/feedbacktwo",
                     },
                     {
                         name: "Refine",
-                        path: "refine",
+                        path: "/refine",
                     },
                     {
                         name: "Contact",
-                        path: "contact",
+                        path: "/contact",
                     },
                     {
                         name: "Payment",
-                        path: "payment",
+                        path: "/payment",
                     },
                 ],
                 getBy: "nav",
