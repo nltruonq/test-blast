@@ -4,9 +4,9 @@ const menuController = require("../controllers/menuController");
 const middlewareController = require("../controllers/middlewareController");
 
 //get menu
-router.get("/", middlewareController.verifyToken, menuController.getMenu);
+router.get("/", menuController.getMenu);
 
 //add default
-router.post('/default', middlewareController.verifyTokenAndAdmin, menuController.addDefault);
+router.post("/default", middlewareController.verifyTokenAndAdmin, menuController.addDefault);
 
 module.exports = router;
