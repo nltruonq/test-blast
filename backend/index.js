@@ -57,6 +57,9 @@ app.get("/", (req, res, next) => {
     res.status(200).json({ message: "ok" });
 });
 
+//function auto run
+require('./utils/schedule')();
+
 app.listen(process.env.PORT || 8000, () => {
     console.log("Server is running");
 });
