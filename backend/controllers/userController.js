@@ -150,13 +150,16 @@ const userController = {
                         pkgs[pkgs.length - 1].numberSubmitFeedback += pkgs[i].numberSubmitFeedback;
                         pkgs[pkgs.length - 1].numberSubmitRefine += pkgs[i].numberSubmitRefine;
                     }
-                    return res.status(200).json(pkgs[pkgs.length - 1]);
+                    return res.status(200).json({
+                        numberSubmitFeedback: pkgs[pkgs.length - 1].numberSubmitFeedback,
+                        numberSubmitRefine: pkgs[pkgs.length - 1].numberSubmitRefine,
+                    });
                 }
-                return res.status(200).json(pkgs);
-            } else {
-                return res.status(200).json([]);
-                
             }
+            return res.status(200).json({
+                numberSubmitFeedback: 0,
+                numberSubmitRefine: 0,
+            });
         } catch (err) {
             return res.status(500).json(err);
         }

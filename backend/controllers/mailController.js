@@ -35,6 +35,16 @@ const mailController = {
             return res.status(500).json(err.message);
         }
     },
+    sendMailPayment: async (req, res) => {
+        try {
+            const mail = req.body;
+            mailer.sendMail(mail.email, "BLAST - Payment", mailer.templatePayment(mail.email, mail.packageName));
+            mailer.sendMail(process.env.MAIL_FROM_ADDRESS, "BLAST - Payment", mailer.templatePayment(mail.email, mail.packageName));
+            return res.status(200).json({ message: "Success!" });
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    },
 };
 
 module.exports = mailController;
