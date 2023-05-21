@@ -50,7 +50,28 @@ const menuController = {
             await type.save();
 
             const nav = new Menu({
-                nav: ["Feedback 1", "Feedback 2", "Refine", "Contact", "Logout"],
+                nav: [
+                    {
+                        name: "Feedback 1",
+                        path: "feedbackone",
+                    },
+                    {
+                        name: "Feedback 2",
+                        path: "feedbacktwo",
+                    },
+                    {
+                        name: "Refine",
+                        path: "refine",
+                    },
+                    {
+                        name: "Contact",
+                        path: "contact",
+                    },
+                    {
+                        name: "Payment",
+                        path: "payment",
+                    },
+                ],
                 getBy: "nav",
             });
             await nav.save();

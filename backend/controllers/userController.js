@@ -129,6 +129,31 @@ const userController = {
         }
     },
 
+    //Find the package currently being used by a user
+    findPackageCurrentlyUse: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const packagesUser = await User.findOne({ _id: id }).select("packages");
+            if (packagesUser.packages.length > 0) {
+                const now = new Date(Date.now());
+                const day = now.getDate();
+                const month = now.getMonth() + 1;
+                const year = now.getFullYear();
+                let pkgs = packagesUser.packages.filter((e, i) => {
+                    const [d, m, y] = e.expiration_date.split("/");
+                    if (new Date(`${y}-${m}-${d}`) > now || (parseInt(d) === day && parseInt(m) === month && parseInt(y) === year)) {
+                        return e;
+                    }
+                });
+                return res.status(200).json(pkgs);
+            } else {
+                return res.status(200).json([]);
+            }
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    },
+
     //Find user has usage package 3 days left
     findUserHasUsagePackage: async (req, res) => {
         try {

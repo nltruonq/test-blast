@@ -308,13 +308,13 @@ const User = () => {
 
     const openModal = async (e) => {
         handleLeftDrawerToggle();
-        const user = await axiosJWT.get(`${SERVER_API}/user/${e.row._id}`, {
+        const getUser = await axiosJWT.get(`${SERVER_API}/user/${e.row._id}`, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`
             }
         });
-        user.data.packages = user.data.packages.map((e, i) => ({ ...e, id: i + 1 }));
-        setInfoUser(user.data);
+        getUser.data.packages = getUser.data.packages.map((e, i) => ({ ...e, id: i + 1 }));
+        setInfoUser(getUser.data);
         setIsOpen(true);
     };
 
