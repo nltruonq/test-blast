@@ -9,6 +9,15 @@ const packageController = {
             return res.status(500).json(err.message);
         }
     },
+    getPackage: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const package = await Package.find({ _id: id });
+            return res.status(200).json(package);
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    },
     addPackage: async (req, res) => {
         const package = req.body;
         try {

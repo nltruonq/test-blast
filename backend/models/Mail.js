@@ -12,7 +12,11 @@ const mailSchema = new mongoose.Schema(
         },
         subject: {
             type: String,
-        }, 
+        },
+        type: {
+            type: String,
+            default: "contact",
+        },
     },
     { timestamps: true }
 );

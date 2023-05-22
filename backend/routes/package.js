@@ -9,6 +9,7 @@ router.patch("/:id", middlewareController.verifyTokenAndAdmin, packageController
 
 //get all package
 router.get("/all", packageController.getAllPackage);
+router.get("/:id", packageController.getPackage);
 
 //add new package
 router.post("/", middlewareController.verifyTokenAndAdmin, packageController.addPackage);
