@@ -80,9 +80,9 @@ const User = () => {
 
                     if (pkg) {
                         const aPackge = packages.filter((e) => e.name === pkg)[0];
-                        const pur_date = new Date(Date.now()).toLocaleDateString();
+                        const pur_date = new Date(Date.now());
                         let exp_date = new Date(Date.now());
-                        exp_date = new Date(exp_date.setDate(exp_date.getDate() + parseInt(aPackge.time))).toLocaleDateString();
+                        exp_date = new Date(exp_date.setDate(exp_date.getDate() + parseInt(aPackge.time)));
                         await axiosJWT.patch(
                             `${SERVER_API}/user/add_package`,
                             {
@@ -94,8 +94,8 @@ const User = () => {
                                     numberSubmitRefine: aPackge.numberSubmitRefine,
                                     amountTokenUsedFeedback: 0,
                                     amountTokenUsedRefine: 0,
-                                    purchase_date: pur_date,
-                                    expiration_date: exp_date
+                                    purchase_date: `${pur_date.getDate()}/${pur_date.getMonth() + 1}/${pur_date.getFullYear()}`,
+                                    expiration_date: `${exp_date.getDate()}/${exp_date.getMonth() + 1}/${exp_date.getFullYear()}`
                                 }
                             },
                             {

@@ -122,7 +122,13 @@ const userController = {
                         return e;
                     }
                 });
-                if (pkgs.length > 0) {
+                if (pkgs.length === 1) {
+                    return res.status(200).json({
+                        numberSubmitFeedback: pkgs[0].numberSubmitFeedback,
+                        numberSubmitRefine: pkgs[0].numberSubmitRefine,
+                    });
+                }
+                if (pkgs.length > 1) {
                     for (let i = 0; i < pkgs.length - 1; i++) {
                         pkgs[pkgs.length - 1].numberSubmitFeedback += pkgs[i].numberSubmitFeedback;
                         pkgs[pkgs.length - 1].numberSubmitRefine += pkgs[i].numberSubmitRefine;
