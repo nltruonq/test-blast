@@ -5,6 +5,7 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import Package from 'views/package';
 import Prompt from 'views/prompt';
+import Mail from 'views/mail';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -94,6 +95,10 @@ const MainRoutes = {
         {
             path: 'prompt',
             element: <Prompt />
+        },
+        {
+            path: 'mail',
+            element: <Mail />
         }
     ]
 };

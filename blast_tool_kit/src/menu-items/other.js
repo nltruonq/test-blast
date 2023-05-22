@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt, IconMailbox } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt };
+const icons = { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt, IconMailbox };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -32,6 +32,14 @@ const other = {
             type: 'item',
             url: '/prompt',
             icon: icons.IconPrompt,
+            breadcrumbs: false
+        },
+        {
+            id: 'mail',
+            title: 'Mails',
+            type: 'item',
+            url: '/mail',
+            icon: icons.IconMailbox,
             breadcrumbs: false
         }
         // ,
