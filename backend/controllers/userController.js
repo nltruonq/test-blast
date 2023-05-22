@@ -56,7 +56,7 @@ const userController = {
                 },
                 { returnDocument: "after" }
             ).select("+password");
-            const accessToken = await authController.generateAccessToken(user);
+            // const accessToken = await authController.generateAccessToken(user);
             // if (req.body.profilePicture || req.body.theme) {
             //     try {
             //         await User.updateMany(

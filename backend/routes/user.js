@@ -18,6 +18,8 @@ router.get("/:id", middlewareController.verifyToken, userController.getUser);
 router.patch("/add_package", middlewareController.verifyTokenAndAdmin, userController.addPackage);
 //UPDATE A USER
 router.patch("/:id", middlewareController.verifyTokenAndUserAuthorization, userController.updateUserForAdmin);
+//UPDATE PASSWORD
+router.patch("/pw/:id", middlewareController.verifyTokenAndUserAuthorization, userController.updateUser);
 
 //DELETE A USER
 router.delete("/:id", middlewareController.verifyTokenAndAdmin, userController.deleteUser);
