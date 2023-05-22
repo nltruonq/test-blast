@@ -39,7 +39,14 @@ const mailController = {
         try {
             const mail = req.body;
             mailer.sendMail(mail.email, "BLAST - Payment", mailer.templatePayment(mail.email, mail.packageName));
-            mailer.sendMail(process.env.MAIL_FROM_ADDRESS, "BLAST - Payment", mailer.templatePayment(mail.email, mail.packageName));
+            mailer.sendMail(process.env.MAIL_FROM_ADDRESS, "BLAST - Payment", mailer.templatePaymentAdmin(mail.email, mail.packageName));
+            const newMail = new Mail({
+                email: mail.email,
+                content: mail?.content || `${mail.email} has purchased the ${mail.packageName} package`,
+                subject: "BLAST - Payment",
+                type: "payment",
+            });
+            await newMail.save();
             return res.status(200).json({ message: "Success!" });
         } catch (err) {
             return res.status(500).json(err.message);
