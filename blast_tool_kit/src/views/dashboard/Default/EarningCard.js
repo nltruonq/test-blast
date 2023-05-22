@@ -93,7 +93,7 @@ const EarningCard = ({ isLoading }) => {
                                         </Avatar>
                                     </Grid>
                                     <Grid item>
-                                        <Avatar
+                                        {/* <Avatar
                                             variant="rounded"
                                             sx={{
                                                 ...theme.typography.commonAvatar,
@@ -107,8 +107,8 @@ const EarningCard = ({ isLoading }) => {
                                             onClick={handleClick}
                                         >
                                             <MoreHorizIcon fontSize="inherit" />
-                                        </Avatar>
-                                        <Menu
+                                        </Avatar> */}
+                                        {/* <Menu
                                             id="menu-earning-card"
                                             anchorEl={anchorEl}
                                             keepMounted
@@ -136,7 +136,7 @@ const EarningCard = ({ isLoading }) => {
                                             <MenuItem onClick={handleClose}>
                                                 <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
                                             </MenuItem>
-                                        </Menu>
+                                        </Menu> */}
                                     </Grid>
                                 </Grid>
                             </Grid>
