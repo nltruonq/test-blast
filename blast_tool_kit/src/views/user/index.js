@@ -11,7 +11,7 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import { SERVER_API, AUTHEN } from '../../host/index';
+import { SERVER_API } from '../../host/index';
 import { SET_MENU } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../axios/axiosInstance';

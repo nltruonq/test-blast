@@ -11,7 +11,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { createAxios } from '../../axios/axiosInstance';
 
-import { SERVER_API, AUTHEN } from '../../host/index';
+import { SERVER_API } from '../../host/index';
 
 const Package = () => {
     const [users, setUsers] = useState([]);
