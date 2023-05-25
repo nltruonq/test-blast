@@ -12,7 +12,8 @@ const packageScheme = new mongoose.Schema(
         },
         time: {
             type: Number,
-            required: [true, "Required"],
+            // required: [true, "Required"],
+            default: 30,
         },
         price: {
             type: Number,

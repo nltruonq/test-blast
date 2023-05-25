@@ -5,12 +5,10 @@ const userController = require("../controllers/userController");
 
 //GET ALL USER
 router.get("/all", middlewareController.verifyTokenAndAdmin, userController.getAllUser);
-//GET USERS HAVE USAGE PACKAGE 3 DAYS LEFT
-router.get("/3days", middlewareController.verifyTokenAndAdmin, userController.findUserHasUsagePackage);
 //GET the package currently being used by a user
 router.get("/currently/:id", middlewareController.verifyToken, userController.findPackageCurrentlyUse);
-//GET the package currently being used by a user
-router.get("/unexpired/:id", middlewareController.verifyToken, userController.findAllPackagesUnexpired);
+//GET package history of user
+router.get("/history/:id", middlewareController.verifyToken, userController.findPackageHistory);
 //GET A USER
 router.get("/:id", middlewareController.verifyToken, userController.getUser);
 

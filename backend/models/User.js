@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema(
         affiliate: [],
         recommender: {
             type: String,
+            default: "none",
         },
     },
     { timestamps: true }

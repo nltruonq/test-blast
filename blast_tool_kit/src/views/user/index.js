@@ -50,7 +50,7 @@ const User = () => {
         { field: 'email', headerName: 'Email', width: 300 },
         { field: 'package_name', headerName: 'Package name', width: 130 },
         { field: 'purchase_date', headerName: 'Purchase date', width: 120 },
-        { field: 'expiration_date', headerName: 'Expiration date', width: 120 },
+        // { field: 'expiration_date', headerName: 'Expiration date', width: 120 },
         { field: 'numberAffiliate', headerName: 'Affiliate', width: 100 },
         { field: 'status', headerName: 'Status', width: 90 },
         {
@@ -81,12 +81,13 @@ const User = () => {
                     if (pkg) {
                         const aPackge = packages.filter((e) => e.name === pkg)[0];
                         const pur_date = new Date(Date.now());
-                        let exp_date = new Date(Date.now());
-                        exp_date = new Date(exp_date.setDate(exp_date.getDate() + parseInt(aPackge.time)));
+                        // let exp_date = new Date(Date.now());
+                        // exp_date = new Date(exp_date.setDate(exp_date.getDate() + parseInt(aPackge.time)));
                         await axiosJWT.patch(
                             `${SERVER_API}/user/add_package`,
                             {
                                 username: currentRow.username,
+                                email: currentRow.email,
                                 package: {
                                     packageName: aPackge.name,
                                     packageId: aPackge._id,
@@ -94,8 +95,8 @@ const User = () => {
                                     numberSubmitRefine: aPackge.numberSubmitRefine,
                                     amountTokenUsedFeedback: 0,
                                     amountTokenUsedRefine: 0,
-                                    purchase_date: `${pur_date.getDate()}/${pur_date.getMonth() + 1}/${pur_date.getFullYear()}`,
-                                    expiration_date: `${exp_date.getDate()}/${exp_date.getMonth() + 1}/${exp_date.getFullYear()}`
+                                    purchase_date: `${pur_date.getDate()}/${pur_date.getMonth() + 1}/${pur_date.getFullYear()}`
+                                    // expiration_date: `${exp_date.getDate()}/${exp_date.getMonth() + 1}/${exp_date.getFullYear()}`
                                 }
                             },
                             {
@@ -112,10 +113,10 @@ const User = () => {
                 const handleEdit = async (e) => {
                     e.stopPropagation();
                     const currentRow = params.row;
-                    let exp;
-                    if (currentRow.expiration_date) {
-                        exp = currentRow.expiration_date.split('/');
-                    }
+                    // let exp;
+                    // if (currentRow.expiration_date) {
+                    //     exp = currentRow.expiration_date.split('/');
+                    // }
                     const { value: formValues } = await Swal.fire({
                         title: 'Edit user',
                         html:
@@ -124,29 +125,30 @@ const User = () => {
                             )} class="swal2-input">` +
                             `<label for="swal-input2">Email</label><input id="swal-input2" value=${JSON.stringify(
                                 currentRow.email
-                            )} class="swal2-input">` +
-                            `${
-                                currentRow.expiration_date
-                                    ? `<label for="swal-input3">Expiration</label><input id="swal-input3" type="date" value=${
-                                          JSON.stringify(
-                                              new Date(currentRow.expiration_date && `${exp[2]}, ${exp[1]}, ${exp[0]}`).toLocaleDateString(
-                                                  'fr-CA',
-                                                  {
-                                                      year: 'numeric',
-                                                      month: '2-digit',
-                                                      day: '2-digit'
-                                                  }
-                                              )
-                                          ) || null
-                                      } class="swal2-input">`
-                                    : ''
-                            }`,
+                            )} class="swal2-input">`,
+                        //  +
+                        // `${
+                        //     currentRow.expiration_date
+                        //         ? `<label for="swal-input3">Expiration</label><input id="swal-input3" type="date" value=${
+                        //               JSON.stringify(
+                        //                   new Date(currentRow.expiration_date && `${exp[2]}, ${exp[1]}, ${exp[0]}`).toLocaleDateString(
+                        //                       'fr-CA',
+                        //                       {
+                        //                           year: 'numeric',
+                        //                           month: '2-digit',
+                        //                           day: '2-digit'
+                        //                       }
+                        //                   )
+                        //               ) || null
+                        //           } class="swal2-input">`
+                        //         : ''
+                        // }`,
                         focusConfirm: false,
                         preConfirm: () => {
                             return [
                                 document.getElementById('swal-input1').value,
-                                document.getElementById('swal-input2').value,
-                                document?.getElementById('swal-input3')?.value || null
+                                document.getElementById('swal-input2').value
+                                // document?.getElementById('swal-input3')?.value || null
                             ];
                         }
                     });
@@ -156,8 +158,8 @@ const User = () => {
                             `${SERVER_API}/user/${currentRow._id}`,
                             {
                                 username: formValues[0],
-                                email: formValues[1],
-                                expiration_date: new Date(formValues[2]).toLocaleDateString()
+                                email: formValues[1]
+                                // expiration_date: new Date(formValues[2]).toLocaleDateString()
                             },
                             {
                                 headers: {
@@ -221,8 +223,8 @@ const User = () => {
         { field: 'numberSubmitRefine', headerName: 'Remaining submit refine', width: 170 },
         { field: 'amountTokenUsedFeedback', headerName: 'Token used of feedback', width: 160 },
         { field: 'amountTokenUsedRefine', headerName: 'Token used of refine', width: 150 },
-        { field: 'purchase_date', headerName: 'Purchase date', width: 120 },
-        { field: 'expiration_date', headerName: 'Expiration date', width: 120 }
+        { field: 'purchase_date', headerName: 'Purchase date', width: 120 }
+        // { field: 'expiration_date', headerName: 'Expiration date', width: 120 }
     ];
 
     const getAllPackage = async () => {
@@ -254,7 +256,7 @@ const User = () => {
 
     const handleCreate = async () => {
         const { value: formValues } = await Swal.fire({
-            title: 'Creating a prompt',
+            title: 'Creating a user',
             html:
                 `<label>Username</label><input id="swal-input1" class="swal2-input">` +
                 `<label>Password</label><input id="swal-input2" class="swal2-input">` +
@@ -340,10 +342,10 @@ const User = () => {
                     columns={columns}
                     initialState={{
                         pagination: {
-                            paginationModel: { page: 0, pageSize: 5 }
+                            paginationModel: { page: 0, pageSize: 10 }
                         }
                     }}
-                    pageSizeOptions={[5, 10]}
+                    pageSizeOptions={[10, 40]}
                     onRowClick={(e) => openModal(e)}
                     // onCellClick={(params, event) => event.stopPropagation()}
                     sx={{
@@ -367,7 +369,7 @@ const User = () => {
                             paginationModel: { page: 0, pageSize: 10 }
                         }
                     }}
-                    pageSizeOptions={[5, 10]}
+                    pageSizeOptions={[10, 40]}
                     sx={{
                         '.MuiDataGrid-cell:focus': {
                             outline: 'none'

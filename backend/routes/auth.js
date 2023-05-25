@@ -3,8 +3,9 @@ const router = require("express").Router();
 const authController = require("../controllers/authController");
 
 const middlewareController = require("../controllers/middlewareController");
+
 //REGISTER
-// router.post("/register", authController.registerUser);
+router.post("/register", middlewareController.verifyTokenAndAdmin, authController.registerUser);
 //VERIFI EMAIL
 router.get("/verify", authController.verifyEmail);
 //REFRESH TOKEN

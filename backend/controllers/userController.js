@@ -90,15 +90,11 @@ const userController = {
     addPackage: async (req, res) => {
         try {
             //body {username, id_package}
-            const { username, package } = req.body;
-            const packagesUser = await User.findOne({ username: username }).select("packages recommender");
-            const user = await User.findOneAndUpdate(
-                { username: username },
-                { $set: { packages: [...packagesUser.packages, package] } },
-                { returnDocument: "after" }
-            );
+            const { username, package, email } = req.body;
+            const packagesUser = await User.findOne({ email: email }).select("packages recommender");
+            const user = await User.findOneAndUpdate({ username: username }, { $push: { packages: package } }, { returnDocument: "after" });
             if (packagesUser.recommender) {
-                await User.findByIdAndUpdate(packagesUser.recommender, { $push: { affiliate: packagesUser._id } });
+                await User.findByIdAndUpdate(packagesUser.recommender, { $addToSet: { affiliate: packagesUser._id } });
             }
             return res.status(200).json(user);
         } catch (err) {
@@ -111,94 +107,109 @@ const userController = {
         try {
             const id = req.params.id;
             const packagesUser = await User.findOne({ _id: id }).select("packages");
-            if (packagesUser.packages.length > 0) {
-                const now = new Date(Date.now());
-                const day = now.getDate();
-                const month = now.getMonth() + 1;
-                const year = now.getFullYear();
-                let pkgs = packagesUser.packages.filter((e, i) => {
-                    const [d, m, y] = e.expiration_date.split("/");
-                    if (new Date(`${y}-${m}-${d}`) > now || (parseInt(d) === day && parseInt(m) === month && parseInt(y) === year)) {
-                        return e;
-                    }
-                });
-                if (pkgs.length === 1) {
-                    return res.status(200).json({
-                        numberSubmitFeedback: pkgs[0].numberSubmitFeedback,
-                        numberSubmitRefine: pkgs[0].numberSubmitRefine,
-                    });
-                }
-                if (pkgs.length > 1) {
-                    for (let i = 0; i < pkgs.length - 1; i++) {
-                        pkgs[pkgs.length - 1].numberSubmitFeedback += pkgs[i].numberSubmitFeedback;
-                        pkgs[pkgs.length - 1].numberSubmitRefine += pkgs[i].numberSubmitRefine;
-                    }
-                    return res.status(200).json({
-                        numberSubmitFeedback: pkgs[pkgs.length - 1].numberSubmitFeedback,
-                        numberSubmitRefine: pkgs[pkgs.length - 1].numberSubmitRefine,
-                    });
-                }
-            }
-            return res.status(200).json({
+
+            const init = {
                 numberSubmitFeedback: 0,
                 numberSubmitRefine: 0,
-            });
+            };
+            const result = packagesUser.packages.reduce((acc, cur) => {
+                return {
+                    numberSubmitFeedback: acc.numberSubmitFeedback + cur.numberSubmitFeedback,
+                    numberSubmitRefine: acc.numberSubmitRefine + cur.numberSubmitRefine,
+                };
+            }, init);
+            return res.status(200).json(result);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    },
+
+    //Find the package currently being used by a user
+    findPackageHistory: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const packagesUser = await User.findOne({ _id: id }).select("packages");
+            return res.status(200).json(packagesUser.packages);
         } catch (err) {
             return res.status(500).json(err);
         }
     },
 
     //Find all find all unexpired packages of user
-    findAllPackagesUnexpired: async (req, res) => {
-        try {
-            const id = req.params.id;
-            const packagesUser = await User.findOne({ _id: id }).select("packages");
-            if (packagesUser.packages.length > 0) {
-                const now = new Date(Date.now());
-                const day = now.getDate();
-                const month = now.getMonth() + 1;
-                const year = now.getFullYear();
-                let pkgs = packagesUser.packages.filter((e, i) => {
-                    const [d, m, y] = e.expiration_date.split("/");
-                    if (new Date(`${y}-${m}-${d}`) > now || (parseInt(d) === day && parseInt(m) === month && parseInt(y) === year)) {
-                        return e;
-                    }
-                });
-                return res.status(200).json(pkgs);
-            } else {
-                return res.status(200).json([]);
-            }
-        } catch (err) {
-            return res.status(500).json(err);
-        }
-    },
+    // findAllPackagesUnexpired: async (req, res) => {
+    //     try {
+    //         const id = req.params.id;
+    //         const packagesUser = await User.findOne({ _id: id }).select("packages");
+    //         if (packagesUser.packages.length > 0) {
+    //             const now = new Date(Date.now());
+    //             const day = now.getDate();
+    //             const month = now.getMonth() + 1;
+    //             const year = now.getFullYear();
+    //             let pkgs = packagesUser.packages.filter((e, i) => {
+    //                 const [d, m, y] = e.expiration_date.split("/");
+    //                 if (new Date(`${y}-${m}-${d}`) > now || (parseInt(d) === day && parseInt(m) === month && parseInt(y) === year)) {
+    //                     return e;
+    //                 }
+    //             });
+    //             return res.status(200).json(pkgs);
+    //         } else {
+    //             return res.status(200).json([]);
+    //         }
+    //     } catch (err) {
+    //         return res.status(500).json(err);
+    //     }
+    // },
+
+    // findAllPackagesUnexpired: async (req, res) => {
+    //     try {
+    //         const id = req.params.id;
+    //         const packagesUser = await User.findOne({ _id: id }).select("packages");
+    //         if (packagesUser.packages.length > 0) {
+    //             const now = new Date(Date.now());
+    //             const day = now.getDate();
+    //             const month = now.getMonth() + 1;
+    //             const year = now.getFullYear();
+    //             let pkgs = packagesUser.packages.filter((e, i) => {
+    //                 const [d, m, y] = e.expiration_date.split("/");
+    //                 if (new Date(`${y}-${m}-${d}`) > now || (parseInt(d) === day && parseInt(m) === month && parseInt(y) === year)) {
+    //                     return e;
+    //                 }
+    //             });
+    //             return res.status(200).json(pkgs);
+    //         } else {
+    //             return res.status(200).json([]);
+    //         }
+    //     } catch (err) {
+    //         return res.status(500).json(err);
+    //     }
+    // },
 
     //Find user has usage package 3 days left
-    findUserHasUsagePackage: async (req, res) => {
-        try {
-            const users = await User.find({}, { packages: { $slice: -1 } });
-            const list = [];
-            users.forEach((e, i) => {
-                let threedays = new Date(Date.now());
-                threedays.setDate(threedays.getDate() + 30);
-                if (e.packages.length === 1) {
-                    const expiration_date = e.packages[0].expiration_date;
-                    const [d, m, y] = expiration_date.split("/");
-                    if (
-                        threedays.getDate() === parseInt(d) &&
-                        threedays.getMonth() + 1 === parseInt(m) &&
-                        threedays.getFullYear() === parseInt(y)
-                    ) {
-                        sendMail(e.email, "BLAST", "<p>Gói bạn đang sử dụng sắp hết hạn</p>");
-                        list.push(e);
-                    }
-                }
-            });
-            return res.status(200).json(list);
-        } catch (err) {
-            return res.status(500).json(err);
-        }
-    },
+    // findUserHasUsagePackage: async (req, res) => {
+    //     try {
+    //         const users = await User.find({}, { packages: { $slice: -1 } });
+    //         const list = [];
+    //         users.forEach((e, i) => {
+    //             let threedays = new Date(Date.now());
+    //             threedays.setDate(threedays.getDate() + 30);
+    //             if (e.packages.length === 1) {
+    //                 const expiration_date = e.packages[0].expiration_date;
+    //                 const [d, m, y] = expiration_date.split("/");
+    //                 if (
+    //                     threedays.getDate() === parseInt(d) &&
+    //                     threedays.getMonth() + 1 === parseInt(m) &&
+    //                     threedays.getFullYear() === parseInt(y)
+    //                 ) {
+    //                     sendMail(e.email, "BLAST", "<p>Gói bạn đang sử dụng sắp hết hạn</p>");
+    //                     list.push(e);
+    //                 }
+    //             }
+    //         });
+    //         return res.status(200).json(list);
+    //     } catch (err) {
+    //         return res.status(500).json(err);
+    //     }
+    // },
 
     //UPDATE A USER FOR ADMIN
     updateUserForAdmin: async (req, res) => {
@@ -209,15 +220,15 @@ const userController = {
                     $set: { username: req.body.username, email: req.body.email },
                 }
             );
-            if (req.body.expiration_date !== "1/1/1970") {
-                const packagesUser = await User.findOne({ _id: req.params.id }).select("packages -_id");
-                packagesUser.packages[packagesUser.packages.length - 1].expiration_date = req.body.expiration_date;
-                user = await User.findOneAndUpdate(
-                    { _id: req.params.id },
-                    { $set: { packages: packagesUser.packages } },
-                    { returnDocument: "after" }
-                );
-            }
+            // if (req.body.expiration_date !== "1/1/1970") {
+            //     const packagesUser = await User.findOne({ _id: req.params.id }).select("packages -_id");
+            //     packagesUser.packages[packagesUser.packages.length - 1].expiration_date = req.body.expiration_date;
+            //     user = await User.findOneAndUpdate(
+            //         { _id: req.params.id },
+            //         { $set: { packages: packagesUser.packages } },
+            //         { returnDocument: "after" }
+            //     );
+            // }
             return res.status(200).json(user);
         } catch (err) {
             res.status(500).json(err);

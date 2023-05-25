@@ -8,13 +8,15 @@ const authController = {
     //REGISTER
     registerUser: async (req, res) => {
         try {
-            // const salt = await bcrypt.genSalt(10);
-            // const hashed = await bcrypt.hash(req.body.password, salt);
+            const salt = await bcrypt.genSalt(10);
+            const hashed = await bcrypt.hash(req.body.password, salt);
 
             //Create new user
             const newUser = new User({
+                username: req.body.username,
+                password: hashed,
                 email: req.body.email,
-                recommender: req.query.recommender || null,
+                recommender: req.query.recommender || "none",
             });
 
             //Save user to DB
@@ -72,7 +74,7 @@ const authController = {
     //LOGIN
     loginUser: async (req, res) => {
         try {
-            const { idToken, email } = req.body;
+            const { idToken, email, recommender } = req.body;
             if (!idToken || !email) {
                 return res.status(401).json({ message: "You are not authenticated" });
             }
@@ -89,7 +91,7 @@ const authController = {
                             email: req.body.email,
                             displayName: decodedToken.name,
                             profilePicture: decodedToken.picture,
-                            recommender: req.query.recommender || null,
+                            recommender: recommender || "none",
                         });
 
                         //Save user to DB
