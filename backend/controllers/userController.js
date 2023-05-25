@@ -231,7 +231,18 @@ const userController = {
             // }
             return res.status(200).json(user);
         } catch (err) {
-            res.status(500).json(err);
+            return res.status(500).json(err.message);
+        }
+    },
+
+    getLinkAffiliate: async (req, res) => {
+        try {
+            const id = req.params.id;
+            const user = await User.findOne({ _id: id });
+            const linkAffiliate = `${process.env.APP_URL}/login?recommender=${user._id}`;
+            return res.status(200).json({ href: linkAffiliate });
+        } catch (err) {
+            return res.status(500).json(err.message);
         }
     },
 };

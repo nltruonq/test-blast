@@ -15,6 +15,7 @@ import { SERVER_API } from '../../host/index';
 import { SET_MENU } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../axios/axiosInstance';
+import { useSearchParams } from 'react-router-dom';
 
 const customStyles = {
     content: {
@@ -34,6 +35,9 @@ const User = () => {
 
     const [infoUser, setInfoUser] = useState({});
 
+    // const [searchParams, setSearchParams] = useSearchParams();
+    // console.log(searchParams.get('recommender'));
+
     let user = JSON.parse(localStorage.getItem('blast-user'));
 
     let axiosJWT = createAxios(user);
@@ -48,7 +52,7 @@ const User = () => {
         { field: 'id', headerName: 'NO', width: 20 },
         { field: 'username', headerName: 'Username', width: 160 },
         { field: 'email', headerName: 'Email', width: 300 },
-        { field: 'package_name', headerName: 'Package name', width: 130 },
+        // { field: 'package_name', headerName: 'Package name', width: 130 },
         { field: 'purchase_date', headerName: 'Purchase date', width: 120 },
         // { field: 'expiration_date', headerName: 'Expiration date', width: 120 },
         { field: 'numberAffiliate', headerName: 'Affiliate', width: 100 },
