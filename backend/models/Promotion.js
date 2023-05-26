@@ -15,6 +15,12 @@ const promotionScheme = new mongoose.Schema(
             // required: [true, "Required"],
             default: 30,
         },
+        packageId: {
+            type: String,
+        },
+        packageName: {
+            type: String,
+        },
         numberSubmitRefine: {
             type: Number,
             required: [true, "Required"],

@@ -2,6 +2,7 @@ const User = require("../models/User");
 
 const bcrypt = require("bcrypt");
 const { sendMail } = require("../utils/mailer");
+const Promotion = require("../models/Promotion");
 
 const userController = {
     //GET ALL USER
@@ -91,8 +92,19 @@ const userController = {
         try {
             const { package, email } = req.body;
             const packagesUser = await User.findOne({ email: email }).select("packages recommender");
+
+            let hasPackage = false;
+            packagesUser.packages.forEach((e, i) => {
+                if (package.packageId === e.packageId) {
+                    hasPackage = true;
+                }
+            });
             const user = await User.findOneAndUpdate({ email: email }, { $push: { packages: package } }, { returnDocument: "after" });
-            if (packagesUser.recommender) {
+            if (hasPackage) {
+                const promotionPackage = await Promotion.findOne({ packageId: package.packageId });
+                if (promotionPackage) await User.findOneAndUpdate({ email: email }, { $push: { promotions: promotionPackage } });
+            }
+            if (packagesUser.recommender && packagesUser.recommender !== "none") {
                 await User.findByIdAndUpdate(packagesUser.recommender, { $addToSet: { affiliate: packagesUser._id } });
             }
             return res.status(200).json(user);

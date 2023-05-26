@@ -15,6 +15,7 @@ import { SERVER_API } from '../../host/index';
 
 const Promotion = () => {
     const [users, setUsers] = useState([]);
+    const [promotions, setPromotions] = useState([]);
     const [packages, setPackages] = useState([]);
 
     let user = JSON.parse(localStorage.getItem('blast-user'));
@@ -25,18 +26,51 @@ const Promotion = () => {
         { field: 'name', headerName: 'Name', width: 160 },
         { field: 'description', headerName: 'Description', width: 300 },
         { field: 'time', headerName: 'Days Usage', width: 130 },
+        { field: 'packageName', headerName: 'For Package', width: 130 },
         { field: 'numberSubmitFeedback', headerName: 'Number of Feedback', width: 150 },
         { field: 'numberSubmitRefine', headerName: 'Number of Refine', width: 150 },
         {
             field: 'action',
             headerName: 'Actions',
-            width: 200,
+            width: 260,
             disableClickEventBubbling: true,
 
             renderCell: (params) => {
                 const onClick = (e) => {
                     const currentRow = params.row;
                     return alert(JSON.stringify(currentRow, null, 4));
+                };
+
+                const handleSelect = async (e) => {
+                    e.stopPropagation();
+                    const currentRow = params.row;
+                    const { value: pkg } = await Swal.fire({
+                        title: 'Select package of this promotion',
+                        input: 'select',
+                        inputOptions: packages.reduce((acc, cur) => {
+                            return { ...acc, [cur.name]: cur.name };
+                        }, {}),
+                        inputPlaceholder: 'Select a package',
+                        showCancelButton: true
+                    });
+
+                    if (pkg) {
+                        const aPackge = packages.filter((e) => e.name === pkg)[0];
+                        await axiosJWT.patch(
+                            `${SERVER_API}/promotion/${currentRow._id}`,
+                            {
+                                packageId: aPackge._id,
+                                packageName: aPackge.name
+                            },
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${user.accessToken}`
+                                }
+                            }
+                        );
+                        await Swal.fire('Success!', '', 'success');
+                        window.location.reload(false);
+                    }
                 };
 
                 const handleEdit = async (e) => {
@@ -118,6 +152,9 @@ const Promotion = () => {
 
                 return (
                     <Stack direction="row" spacing={2}>
+                        <Button variant="contained" color="primary" size="small" onClick={handleSelect}>
+                            Select
+                        </Button>
                         <Button variant="contained" color="warning" size="small" onClick={handleEdit}>
                             Edit
                         </Button>
@@ -130,8 +167,21 @@ const Promotion = () => {
         }
     ];
 
-    const getAllPackage = async () => {
+    const getAllPromotions = async () => {
         const data = await axiosJWT.get(`${SERVER_API}/promotion/all`, {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`
+            }
+        });
+        data.data = data.data.map((e, i) => ({
+            ...e,
+            id: i + 1
+        }));
+        setPromotions(data.data);
+    };
+
+    const getAllPackages = async () => {
+        const data = await axiosJWT.get(`${SERVER_API}/package/all`, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`
             }
@@ -208,7 +258,8 @@ const Promotion = () => {
     useEffect(() => {
         user = JSON.parse(localStorage.getItem('blast-user'));
         if (user) {
-            getAllPackage();
+            getAllPromotions();
+            getAllPackages();
         }
     }, []);
     return (
@@ -218,7 +269,7 @@ const Promotion = () => {
             </Button>
             <div style={{ height: 600, width: '100%', marginTop: 20 }}>
                 <DataGrid
-                    rows={packages}
+                    rows={promotions}
                     columns={columns}
                     initialState={{
                         pagination: {
