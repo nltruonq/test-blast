@@ -89,13 +89,22 @@ const userController = {
     //Add Package for user
     addPackage: async (req, res) => {
         try {
-            //body {username, id_package}
-            const { username, package, email } = req.body;
+            const { package, email } = req.body;
             const packagesUser = await User.findOne({ email: email }).select("packages recommender");
-            const user = await User.findOneAndUpdate({ username: username }, { $push: { packages: package } }, { returnDocument: "after" });
+            const user = await User.findOneAndUpdate({ email: email }, { $push: { packages: package } }, { returnDocument: "after" });
             if (packagesUser.recommender) {
                 await User.findByIdAndUpdate(packagesUser.recommender, { $addToSet: { affiliate: packagesUser._id } });
             }
+            return res.status(200).json(user);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    },
+
+    addPromotion: async (req, res) => {
+        try {
+            const { promotion, email } = req.body;
+            const user = await User.findOneAndUpdate({ email: email }, { $push: { promotions: promotion } }, { returnDocument: "after" });
             return res.status(200).json(user);
         } catch (err) {
             return res.status(500).json(err);
@@ -106,25 +115,31 @@ const userController = {
     findPackageCurrentlyUse: async (req, res) => {
         try {
             const id = req.params.id;
-            const packagesUser = await User.findOne({ _id: id }).select("packages");
+            const packagesUser = await User.findOne({ _id: id }).select("packages promotions");
 
             const init = {
                 numberSubmitFeedback: 0,
                 numberSubmitRefine: 0,
             };
-            const result = packagesUser.packages.reduce((acc, cur) => {
+            const sumPromotions = packagesUser.promotions.reduce((acc, cur) => {
                 return {
                     numberSubmitFeedback: acc.numberSubmitFeedback + cur.numberSubmitFeedback,
                     numberSubmitRefine: acc.numberSubmitRefine + cur.numberSubmitRefine,
                 };
             }, init);
+            const result = packagesUser.packages.reduce((acc, cur) => {
+                return {
+                    numberSubmitFeedback: acc.numberSubmitFeedback + cur.numberSubmitFeedback,
+                    numberSubmitRefine: acc.numberSubmitRefine + cur.numberSubmitRefine,
+                };
+            }, sumPromotions);
             return res.status(200).json(result);
         } catch (err) {
             return res.status(500).json(err);
         }
     },
 
-    //Find the package currently being used by a user
+    //Find the package being used by a user
     findPackageHistory: async (req, res) => {
         try {
             const id = req.params.id;
@@ -234,17 +249,6 @@ const userController = {
             return res.status(500).json(err.message);
         }
     },
-
-    // getLinkAffiliate: async (req, res) => {
-    //     try {
-    //         const id = req.params.id;
-    //         const user = await User.findOne({ _id: id });
-    //         const linkAffiliate = `${process.env.APP_URL}/login?recommender=${user._id}`;
-    //         return res.status(200).json({ href: linkAffiliate });
-    //     } catch (err) {
-    //         return res.status(500).json(err.message);
-    //     }
-    // },
 };
 
 module.exports = userController;

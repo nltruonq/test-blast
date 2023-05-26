@@ -6,6 +6,7 @@ import Loadable from 'ui-component/Loadable';
 import Package from 'views/package';
 import Prompt from 'views/prompt';
 import Mail from 'views/mail';
+import Promotion from 'views/promotion';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -99,6 +100,10 @@ const MainRoutes = {
         {
             path: 'mail',
             element: <Mail />
+        },
+        {
+            path: 'promotion',
+            element: <Promotion />
         }
     ]
 };

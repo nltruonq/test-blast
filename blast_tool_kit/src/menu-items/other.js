@@ -1,8 +1,8 @@
 // assets
-import { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt, IconMailbox } from '@tabler/icons';
+import { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt, IconMailbox, IconDiscountCheck } from '@tabler/icons';
 
 // constant
-const icons = { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt, IconMailbox };
+const icons = { IconBrandChrome, IconHelp, IconUserCircle, IconPackage, IconPrompt, IconMailbox, IconDiscountCheck };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -24,6 +24,14 @@ const other = {
             type: 'item',
             url: '/package',
             icon: icons.IconPackage,
+            breadcrumbs: false
+        },
+        {
+            id: 'promotion',
+            title: 'Promotion Package',
+            type: 'item',
+            url: '/promotion',
+            icon: icons.IconDiscountCheck,
             breadcrumbs: false
         },
         {

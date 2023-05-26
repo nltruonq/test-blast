@@ -14,6 +14,8 @@ router.get("/:id", middlewareController.verifyToken, userController.getUser);
 
 // Add package to user
 router.patch("/add_package", middlewareController.verifyTokenAndAdmin, userController.addPackage);
+// Add promotion to user
+router.patch("/add_promotion", middlewareController.verifyTokenAndAdmin, userController.addPromotion);
 //UPDATE A USER
 router.patch("/:id", middlewareController.verifyTokenAndUserAuthorization, userController.updateUserForAdmin);
 //UPDATE PASSWORD
