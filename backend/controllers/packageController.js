@@ -1,4 +1,5 @@
 const Package = require("../models/Package");
+const User = require("../models/User");
 
 const packageController = {
     getAllPackage: async (req, res) => {
@@ -11,9 +12,17 @@ const packageController = {
     },
     getPackage: async (req, res) => {
         try {
-            const id = req.params.id;
-            const package = await Package.find({ _id: id });
-            return res.status(200).json(package);
+            const packageid = req.params.id;
+            const userId = req.query.userId;
+            const package = await Package.findOne({ _id: packageid });
+            const user = await User.findOne({ _id: userId }).select("packages");
+            let isPayment = false;
+            user.packages.forEach((e, i) => {
+                if (e.packageId === packageid) {
+                    isPayment = true;
+                }
+            });
+            return res.status(200).json({ package, isPayment });
         } catch (err) {
             return res.status(500).json(err.message);
         }
