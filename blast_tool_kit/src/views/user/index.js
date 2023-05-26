@@ -319,6 +319,8 @@ const User = () => {
                 Authorization: `Bearer ${user.accessToken}`
             }
         });
+        getUser.data.promotions = getUser.data.promotions.map((e) => ({ ...e, packageName: e.name }));
+        getUser.data.packages = [...getUser.data.promotions, ...getUser.data.packages];
         getUser.data.packages = getUser.data.packages.map((e, i) => ({ ...e, id: i + 1 }));
         setInfoUser(getUser.data);
         setIsOpen(true);

@@ -1,5 +1,6 @@
 const configOPENAI = require("../configs/openAI");
 const Prompt = require("../models/Prompt");
+const changeSubmit = require("../utils/changeSubmit");
 
 const feedbackController = {
     CallApi: async (req, res, next) => {
@@ -19,6 +20,7 @@ const feedbackController = {
                 max_tokens: 1200,
                 top_p: 1,
             });
+            await changeSubmit(req.params.id);
             res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
