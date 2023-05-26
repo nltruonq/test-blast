@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const feedbackController = require("../controllers/feedbackController");
 
-router.post("/CallApi", feedbackController.CallApi);
+router.post("/CallApi/:id", feedbackController.CallApi);
 
 router.get("/", feedbackController.getPromptFeedback);
 
