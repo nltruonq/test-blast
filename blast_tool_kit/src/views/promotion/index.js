@@ -24,9 +24,10 @@ const Promotion = () => {
     const columns = [
         { field: 'id', headerName: 'NO', width: 20 },
         { field: 'name', headerName: 'Name', width: 160 },
-        { field: 'description', headerName: 'Description', width: 300 },
+        { field: 'description', headerName: 'Description', width: 240 },
         { field: 'time', headerName: 'Days Usage', width: 130 },
         { field: 'packageName', headerName: 'For Package', width: 130 },
+        { field: 'isAffiliate', headerName: 'Is Affiliate', width: 100 },
         { field: 'numberSubmitFeedback', headerName: 'Number of Feedback', width: 150 },
         { field: 'numberSubmitRefine', headerName: 'Number of Refine', width: 150 },
         {
@@ -76,13 +77,17 @@ const Promotion = () => {
                 const handleEdit = async (e) => {
                     const currentRow = params.row;
                     const { value: formValues } = await Swal.fire({
-                        title: 'Creating a prompt',
+                        title: 'Edit a package',
                         html:
                             `<label>Name</label><input value=${JSON.stringify(currentRow.name)} id="swal-input1" class="swal2-input">` +
                             `<div class="group-textarea"><label>Description</label><textarea id="swal-input2" class="swal2-input">${currentRow.description}</textarea></div>` +
                             `<label>Days usage</label><input value=${JSON.stringify(
                                 currentRow.time
                             )} type="Number" id="swal-input3" class="swal2-input">` +
+                            `<label>Is Affiliate</label><select id="swal-input4" class="swal2-input">
+                            <option ${!currentRow.isAffiliate ? 'selected' : ''} value="false">False</option>
+                            <option ${currentRow.isAffiliate ? 'selected' : ''} value="true">True</option>
+                            </select>` +
                             `<label>nFeedback</label><input value=${JSON.stringify(
                                 currentRow.numberSubmitFeedback
                             )} type="Number" id="swal-input5" class="swal2-input">` +
@@ -96,7 +101,7 @@ const Promotion = () => {
                                 document.getElementById('swal-input1').value,
                                 document.getElementById('swal-input2').value,
                                 parseInt(document.getElementById('swal-input3').value),
-                                // parseInt(document.getElementById('swal-input4').value),
+                                document.getElementById('swal-input4').value,
                                 parseInt(document.getElementById('swal-input5').value),
                                 parseInt(document.getElementById('swal-input6').value)
                             ];
@@ -110,9 +115,9 @@ const Promotion = () => {
                                 name: formValues[0],
                                 description: formValues[1],
                                 time: formValues[2],
-                                // price: formValues[2],
-                                numberSubmitFeedback: formValues[3],
-                                numberSubmitRefine: formValues[4]
+                                isAffiliate: formValues[3],
+                                numberSubmitFeedback: formValues[4],
+                                numberSubmitRefine: formValues[5]
                             },
                             {
                                 headers: {
@@ -200,7 +205,10 @@ const Promotion = () => {
                 '<label>Name</label><input id="swal-input1" class="swal2-input">' +
                 '<div class="group-textarea"><label class="label-textarea">Description</label><textarea id="swal-input2" class="swal2-input"></textarea></div>' +
                 '<label>Days usage</label><input type="Number" id="swal-input3" class="swal2-input">' +
-                // '<label>Price</label><input type="Number" id="swal-input4" class="swal2-input">' +
+                `<label>Is Affiliate</label><select id="swal-input4" class="swal2-input">
+                <option value="false">False</option>
+                <option value="true">True</option>
+                </select>` +
                 '<label>nFeedback</label><input type="Number" id="swal-input5" class="swal2-input">' +
                 '<label>nRefine</label><input type="Number" id="swal-input6" class="swal2-input">',
             focusConfirm: false,
@@ -209,7 +217,6 @@ const Promotion = () => {
                     document.getElementById('swal-input1').value === '' ||
                     document.getElementById('swal-input2').value === '' ||
                     isNaN(parseInt(document.getElementById('swal-input3').value)) ||
-                    // isNaN(parseInt(document.getElementById('swal-input4').value)) ||
                     isNaN(parseInt(document.getElementById('swal-input5').value)) ||
                     isNaN(parseInt(document.getElementById('swal-input6').value))
                 ) {
@@ -224,7 +231,7 @@ const Promotion = () => {
                     document.getElementById('swal-input1').value,
                     document.getElementById('swal-input2').value,
                     parseInt(document.getElementById('swal-input3').value),
-                    // parseInt(document.getElementById('swal-input4').value),
+                    document.getElementById('swal-input4').value,
                     parseInt(document.getElementById('swal-input5').value),
                     parseInt(document.getElementById('swal-input6').value)
                 ];
@@ -238,9 +245,9 @@ const Promotion = () => {
                     name: formValues[0],
                     description: formValues[1],
                     time: formValues[2],
-                    // price: formValues[2],
-                    numberSubmitFeedback: formValues[3],
-                    numberSubmitRefine: formValues[4]
+                    isAffiliate: formValues[3],
+                    numberSubmitFeedback: formValues[4],
+                    numberSubmitRefine: formValues[5]
                 },
                 {
                     headers: {

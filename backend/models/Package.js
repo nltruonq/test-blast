@@ -23,6 +23,10 @@ const packageScheme = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        numberSubmitFeedbackMarketing: {
+            type: Number,
+            default: 0,
+        },
         numberSubmitRefine: {
             type: Number,
             required: [true, "Required"],

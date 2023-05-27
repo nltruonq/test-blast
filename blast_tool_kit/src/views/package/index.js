@@ -23,15 +23,15 @@ const Package = () => {
     const columns = [
         { field: 'id', headerName: 'NO', width: 20 },
         { field: 'name', headerName: 'Name', width: 160 },
-        { field: 'description', headerName: 'Description', width: 300 },
+        { field: 'description', headerName: 'Description', width: 240 },
         { field: 'price', headerName: 'Price', width: 150 },
-        { field: 'discount', headerName: 'Discount (%)', width: 100 },
+        { field: 'discount', headerName: 'Discount (%)', width: 120 },
         { field: 'numberSubmitFeedback', headerName: 'Number of Feedback', width: 150 },
         { field: 'numberSubmitRefine', headerName: 'Number of Refine', width: 150 },
         {
             field: 'action',
             headerName: 'Actions',
-            width: 200,
+            width: 160,
             disableClickEventBubbling: true,
 
             renderCell: (params) => {
@@ -43,7 +43,7 @@ const Package = () => {
                 const handleEdit = async (e) => {
                     const currentRow = params.row;
                     const { value: formValues } = await Swal.fire({
-                        title: 'Creating a prompt',
+                        title: 'Edit a package',
                         html:
                             `<label>Name</label><input value=${JSON.stringify(currentRow.name)} id="swal-input1" class="swal2-input">` +
                             `<div class="group-textarea"><label>Description</label><textarea id="swal-input2" class="swal2-input">${currentRow.description}</textarea></div>` +

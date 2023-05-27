@@ -21,6 +21,10 @@ const promotionScheme = new mongoose.Schema(
         packageName: {
             type: String,
         },
+        isAffiliate: {
+            type: Boolean,
+            default: false,
+        },
         numberSubmitRefine: {
             type: Number,
             required: [true, "Required"],

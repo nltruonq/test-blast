@@ -25,6 +25,7 @@ const promotionController = {
                 name: promotion.name,
                 description: promotion.description,
                 time: promotion?.time || 30,
+                isAffiliate: promotion.isAffiliate || false,
                 numberSubmitFeedback: promotion.numberSubmitFeedback,
                 numberSubmitRefine: promotion.numberSubmitRefine,
             });
