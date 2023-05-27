@@ -3,7 +3,11 @@
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { useEffect } from 'react';
-
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import { Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Modal from 'react-modal';
 
@@ -32,7 +36,7 @@ const User = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [users, setUsers] = useState([]);
     const [packages, setPackages] = useState([]);
-
+    const [typePackage, setTypePackage] = useState('package');
     const [infoUser, setInfoUser] = useState({});
 
     // const [searchParams, setSearchParams] = useSearchParams();
@@ -45,16 +49,84 @@ const User = () => {
     const dispatch = useDispatch();
     const leftDrawerOpened = useSelector((state) => state.customization.opened);
     const handleLeftDrawerToggle = () => {
-        dispatch({ type: SET_MENU, opened: leftDrawerOpened === true ? !leftDrawerOpened : leftDrawerOpened });
+        dispatch({ type: SET_MENU, opened: leftDrawerOpened ? !leftDrawerOpened : leftDrawerOpened });
+    };
+    const handleRightDrawerToggle = () => {
+        dispatch({ type: SET_MENU, opened: leftDrawerOpened ? leftDrawerOpened : !leftDrawerOpened });
     };
 
     const columns = [
         { field: 'id', headerName: 'NO', width: 20 },
-        { field: 'username', headerName: 'Username', width: 160 },
+        // { field: 'username', headerName: 'Username', width: 160 },
         { field: 'email', headerName: 'Email', width: 300 },
         // { field: 'package_name', headerName: 'Package name', width: 130 },
         { field: 'purchase_date', headerName: 'Purchase date', width: 120 },
-        // { field: 'expiration_date', headerName: 'Expiration date', width: 120 },
+        // {
+        //     field: 'package_amount',
+        //     headerName: 'Package amount',
+        //     width: 140,
+        //     disableClickEventBubbling: true,
+        //     renderCell: (params) => {
+        //         const onClick = (e) => {
+        //             const currentRow = params.row;
+        //             return alert(JSON.stringify(currentRow, null, 4));
+        //         };
+
+        //         const handleView = async (e) => {
+        //             e.stopPropagation();
+        //             const currentRow = params.row;
+        //             const { value: pkg } = await Swal.fire({
+        //                 title: 'Select package',
+        //                 input: 'select',
+        //                 inputOptions: packages.reduce((acc, cur) => {
+        //                     return { ...acc, [cur.name]: cur.name };
+        //                 }, {}),
+        //                 inputPlaceholder: 'Select a package',
+        //                 showCancelButton: true
+        //             });
+
+        //             if (pkg) {
+        //                 const aPackge = packages.filter((e) => e.name === pkg)[0];
+        //                 const pur_date = new Date(Date.now());
+        //                 // let exp_date = new Date(Date.now());
+        //                 // exp_date = new Date(exp_date.setDate(exp_date.getDate() + parseInt(aPackge.time)));
+        //                 await axiosJWT.patch(
+        //                     `${SERVER_API}/user/add_package`,
+        //                     {
+        //                         username: currentRow.username,
+        //                         email: currentRow.email,
+        //                         package: {
+        //                             packageName: aPackge.name,
+        //                             packageId: aPackge._id,
+        //                             numberSubmitFeedback: aPackge.numberSubmitFeedback,
+        //                             numberSubmitRefine: aPackge.numberSubmitRefine,
+        //                             amountTokenUsedFeedback: 0,
+        //                             amountTokenUsedRefine: 0,
+        //                             purchase_date: `${pur_date.getDate()}/${pur_date.getMonth() + 1}/${pur_date.getFullYear()}`
+        //                             // expiration_date: `${exp_date.getDate()}/${exp_date.getMonth() + 1}/${exp_date.getFullYear()}`
+        //                         }
+        //                     },
+        //                     {
+        //                         headers: {
+        //                             Authorization: `Bearer ${user.accessToken}`
+        //                         }
+        //                     }
+        //                 );
+        //                 await Swal.fire('Success!', '', 'success');
+        //                 window.location.reload(false);
+        //             }
+        //         };
+
+        //         return (
+        //             <Stack direction="row" spacing={2}>
+        //                 <span style={{ lineHeight: '30px' }}>2</span>
+        //                 <Button variant="contained" color="primary" size="small" onClick={handleView}>
+        //                     View
+        //                 </Button>
+        //             </Stack>
+        //         );
+        //     }
+        // },
         { field: 'numberAffiliate', headerName: 'Affiliate', width: 100 },
         { field: 'status', headerName: 'Status', width: 90 },
         {
@@ -220,7 +292,7 @@ const User = () => {
         }
     ];
 
-    const columnsInfoUser = [
+    const columnsInfoUserPackage = [
         { field: 'id', headerName: 'NO', width: 20 },
         { field: 'packageName', headerName: 'Package name', width: 130 },
         { field: 'numberSubmitFeedback', headerName: 'Remaining submit feedback', width: 200 },
@@ -229,6 +301,17 @@ const User = () => {
         { field: 'amountTokenUsedRefine', headerName: 'Token used of refine', width: 150 },
         { field: 'purchase_date', headerName: 'Purchase date', width: 120 }
         // { field: 'expiration_date', headerName: 'Expiration date', width: 120 }
+    ];
+
+    const columnsInfoUserPromotion = [
+        { field: 'id', headerName: 'NO', width: 20 },
+        { field: 'promotionName', headerName: 'Package name', width: 130 },
+        { field: 'numberSubmitFeedback', headerName: 'Remaining submit feedback', width: 200 },
+        { field: 'numberSubmitRefine', headerName: 'Remaining submit refine', width: 170 },
+        // { field: 'amountTokenUsedFeedback', headerName: 'Token used of feedback', width: 160 },
+        // { field: 'amountTokenUsedRefine', headerName: 'Token used of refine', width: 150 },
+        { field: 'purchase_date', headerName: 'Purchase date', width: 120 },
+        { field: 'expiration_date', headerName: 'Expiration date', width: 120 }
     ];
 
     const getAllPackage = async () => {
@@ -319,8 +402,7 @@ const User = () => {
                 Authorization: `Bearer ${user.accessToken}`
             }
         });
-        getUser.data.promotions = getUser.data.promotions.map((e) => ({ ...e, packageName: e.name }));
-        getUser.data.packages = [...getUser.data.promotions, ...getUser.data.packages];
+        getUser.data.promotions = getUser.data.promotions.map((e, i) => ({ ...e, id: i + 1, packageName: e.name }));
         getUser.data.packages = getUser.data.packages.map((e, i) => ({ ...e, id: i + 1 }));
         setInfoUser(getUser.data);
         setIsOpen(true);
@@ -328,6 +410,11 @@ const User = () => {
 
     const closeModal = () => {
         setIsOpen(false);
+        handleRightDrawerToggle();
+    };
+
+    const handleChangeTypePackage = (e) => {
+        setTypePackage(e.target.value);
     };
 
     useEffect(() => {
@@ -367,21 +454,38 @@ const User = () => {
                 />
             </div>
             <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} ariaHideApp={false}>
-                <DataGrid
-                    rows={infoUser.packages}
-                    columns={columnsInfoUser}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 10 }
-                        }
-                    }}
-                    pageSizeOptions={[10, 40]}
-                    sx={{
-                        '.MuiDataGrid-cell:focus': {
-                            outline: 'none'
-                        }
-                    }}
-                />
+                <>
+                    <Box sx={{ minWidth: 120, marginTop: 2 }}>
+                        <FormControl sx={{ minWidth: 200, marginLeft: 2 }}>
+                            <InputLabel id="demo-simple-select-label-type">Type</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label-type"
+                                id="demo-simple-select-type"
+                                value={typePackage}
+                                label="Type"
+                                onChange={handleChangeTypePackage}
+                            >
+                                <MenuItem value="package">Package</MenuItem>
+                                <MenuItem value="promotion">Promotion</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <DataGrid
+                        rows={typePackage === 'package' ? infoUser.packages : infoUser.promotions}
+                        columns={typePackage === 'package' ? columnsInfoUserPackage : columnsInfoUserPromotion}
+                        initialState={{
+                            pagination: {
+                                paginationModel: { page: 0, pageSize: 5 }
+                            }
+                        }}
+                        pageSizeOptions={[5]}
+                        sx={{
+                            '.MuiDataGrid-cell:focus': {
+                                outline: 'none'
+                            }
+                        }}
+                    />
+                </>
             </Modal>
         </>
     );

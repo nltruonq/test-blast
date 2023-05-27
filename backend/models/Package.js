@@ -19,6 +19,10 @@ const packageScheme = new mongoose.Schema(
             type: Number,
             required: [true, "Required"],
         },
+        discount: {
+            type: Number,
+            default: 0,
+        },
         numberSubmitRefine: {
             type: Number,
             required: [true, "Required"],

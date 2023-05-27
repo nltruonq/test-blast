@@ -24,8 +24,8 @@ const Package = () => {
         { field: 'id', headerName: 'NO', width: 20 },
         { field: 'name', headerName: 'Name', width: 160 },
         { field: 'description', headerName: 'Description', width: 300 },
-        // { field: 'time', headerName: 'Days Usage', width: 130 },
         { field: 'price', headerName: 'Price', width: 150 },
+        { field: 'discount', headerName: 'Discount (%)', width: 100 },
         { field: 'numberSubmitFeedback', headerName: 'Number of Feedback', width: 150 },
         { field: 'numberSubmitRefine', headerName: 'Number of Refine', width: 150 },
         {
@@ -47,9 +47,9 @@ const Package = () => {
                         html:
                             `<label>Name</label><input value=${JSON.stringify(currentRow.name)} id="swal-input1" class="swal2-input">` +
                             `<div class="group-textarea"><label>Description</label><textarea id="swal-input2" class="swal2-input">${currentRow.description}</textarea></div>` +
-                            // `<label>Days usage</label><input value=${JSON.stringify(
-                            //     currentRow.time
-                            // )} type="Number" id="swal-input3" class="swal2-input">` +
+                            `<label>Discount</label><input value=${JSON.stringify(
+                                currentRow.discount
+                            )} type="Number" id="swal-input3" class="swal2-input">` +
                             `<label>Price</label><input value=${JSON.stringify(
                                 currentRow.price
                             )} type="Number" id="swal-input4" class="swal2-input">` +
@@ -65,7 +65,7 @@ const Package = () => {
                             return [
                                 document.getElementById('swal-input1').value,
                                 document.getElementById('swal-input2').value,
-                                // parseInt(document.getElementById('swal-input3').value),
+                                parseInt(document.getElementById('swal-input3').value),
                                 parseInt(document.getElementById('swal-input4').value),
                                 parseInt(document.getElementById('swal-input5').value),
                                 parseInt(document.getElementById('swal-input6').value)
@@ -79,10 +79,10 @@ const Package = () => {
                             {
                                 name: formValues[0],
                                 description: formValues[1],
-                                // time: formValues[2],
-                                price: formValues[2],
-                                numberSubmitFeedback: formValues[3],
-                                numberSubmitRefine: formValues[4]
+                                discount: formValues[2],
+                                price: formValues[3],
+                                numberSubmitFeedback: formValues[4],
+                                numberSubmitRefine: formValues[5]
                             },
                             {
                                 headers: {
@@ -153,7 +153,7 @@ const Package = () => {
             html:
                 '<label>Name</label><input id="swal-input1" class="swal2-input">' +
                 '<div class="group-textarea"><label class="label-textarea">Description</label><textarea id="swal-input2" class="swal2-input"></textarea></div>' +
-                // '<label>Days usage</label><input type="Number" id="swal-input3" class="swal2-input">' +
+                '<label>Discount</label><input type="Number" id="swal-input3" class="swal2-input">' +
                 '<label>Price</label><input type="Number" id="swal-input4" class="swal2-input">' +
                 '<label>nFeedback</label><input type="Number" id="swal-input5" class="swal2-input">' +
                 '<label>nRefine</label><input type="Number" id="swal-input6" class="swal2-input">',
@@ -162,7 +162,7 @@ const Package = () => {
                 if (
                     document.getElementById('swal-input1').value === '' ||
                     document.getElementById('swal-input2').value === '' ||
-                    // isNaN(parseInt(document.getElementById('swal-input3').value)) ||
+                    isNaN(parseInt(document.getElementById('swal-input3').value)) ||
                     isNaN(parseInt(document.getElementById('swal-input4').value)) ||
                     isNaN(parseInt(document.getElementById('swal-input5').value)) ||
                     isNaN(parseInt(document.getElementById('swal-input6').value))
@@ -177,7 +177,7 @@ const Package = () => {
                 return [
                     document.getElementById('swal-input1').value,
                     document.getElementById('swal-input2').value,
-                    // parseInt(document.getElementById('swal-input3').value),
+                    parseInt(document.getElementById('swal-input3').value),
                     parseInt(document.getElementById('swal-input4').value),
                     parseInt(document.getElementById('swal-input5').value),
                     parseInt(document.getElementById('swal-input6').value)
@@ -191,10 +191,10 @@ const Package = () => {
                 {
                     name: formValues[0],
                     description: formValues[1],
-                    // time: formValues[2],
-                    price: formValues[2],
-                    numberSubmitFeedback: formValues[3],
-                    numberSubmitRefine: formValues[4]
+                    discount: formValues[2],
+                    price: formValues[3],
+                    numberSubmitFeedback: formValues[4],
+                    numberSubmitRefine: formValues[5]
                 },
                 {
                     headers: {

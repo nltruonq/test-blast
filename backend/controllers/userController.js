@@ -102,7 +102,22 @@ const userController = {
             const user = await User.findOneAndUpdate({ email: email }, { $push: { packages: package } }, { returnDocument: "after" });
             if (hasPackage) {
                 const promotionPackage = await Promotion.findOne({ packageId: package.packageId });
-                if (promotionPackage) await User.findOneAndUpdate({ email: email }, { $push: { promotions: promotionPackage } });
+                const now = new Date(Date.now());
+                const purchase_date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+                now.setDate(now.getDate() + promotionPackage.time);
+                const expiration_date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
+
+                if (promotionPackage) {
+                    const promotionPkg = {
+                        promotionId: promotionPackage._id,
+                        promotionName: promotionPackage.name,
+                        numberSubmitFeedback: promotionPackage.numberSubmitFeedback,
+                        numberSubmitRefine: promotionPackage.numberSubmitRefine,
+                        purchase_date,
+                        expiration_date,
+                    };
+                    await User.findOneAndUpdate({ email: email }, { $push: { promotions: promotionPkg } });
+                }
             }
             if (packagesUser.recommender && packagesUser.recommender !== "none") {
                 await User.findByIdAndUpdate(packagesUser.recommender, { $addToSet: { affiliate: packagesUser._id } });

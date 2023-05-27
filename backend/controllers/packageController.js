@@ -35,6 +35,7 @@ const packageController = {
                 description: package.description,
                 price: package.price,
                 // time: package?.time || 30,
+                discount: package.discount,
                 numberSubmitFeedback: package.numberSubmitFeedback,
                 numberSubmitRefine: package.numberSubmitRefine,
             });
