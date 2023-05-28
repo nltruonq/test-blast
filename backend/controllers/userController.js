@@ -199,7 +199,7 @@ const userController = {
             const packagesUser = await User.findOne({ _id: userId }).select("packages");
             let hasFree = false;
             packagesUser.packages.forEach((e) => {
-                if (e.packageId.equals(packageId)) {
+                if (e.packageId.equals(packageId) && e.packageName.toLowerCase() === "free") {
                     hasFree = true;
                 }
             });
@@ -218,7 +218,11 @@ const userController = {
                 purchase_date: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
             };
             await User.findOneAndUpdate({ _id: userId }, { $push: { packages: newPkg } });
-            return res.status(200).json({ message: "Success!" });
+            return res.status(200).json({
+                message: "Success!",
+                numberSubmitFeedback: freePackage.numberSubmitFeedback,
+                numberSubmitRefine: freePackage.numberSubmitRefine,
+            });
         } catch (err) {
             return res.status(500).json(err);
         }
