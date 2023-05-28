@@ -165,7 +165,22 @@ const userController = {
                 numberSubmitFeedback: 0,
                 numberSubmitRefine: 0,
             };
+
+            const now = new Date(Date.now());
+            const day = now.getDate();
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear();
+
             const sumPromotions = packagesUser.promotions.reduce((acc, cur) => {
+                const [d, m, y] = cur.expiration_date.split("/");
+
+                if (new Date(`${y}-${m}-${d}`) < now && !(parseInt(d) === day && parseInt(m) === month && parseInt(y) === year)) {
+                    return {
+                        numberSubmitFeedback: acc.numberSubmitFeedback,
+                        numberSubmitRefine: acc.numberSubmitRefine,
+                    };
+                }
+
                 return {
                     numberSubmitFeedback: acc.numberSubmitFeedback + cur.numberSubmitFeedback,
                     numberSubmitRefine: acc.numberSubmitRefine + cur.numberSubmitRefine,

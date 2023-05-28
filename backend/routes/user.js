@@ -28,7 +28,7 @@ router.patch("/pw/:id", middlewareController.verifyTokenAndUserAuthorization, us
 router.delete("/:id", middlewareController.verifyTokenAndAdmin, userController.deleteUser);
 
 //TEST
-// const changeSubmit = require("../utils/changeSubmit");
+// const {changeSubmit} = require("../utils/userUtils");
 // router.patch("/submit/:id", async (req, res) => {
 //     const user = await changeSubmit(req.params.id);
 //     return res.status(200).json(user);

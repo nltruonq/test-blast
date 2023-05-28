@@ -2,11 +2,15 @@ const configOPENAI = require("../configs/openAI");
 
 const Prompt = require("../models/Prompt");
 
-const changeSubmit = require("../utils/changeSubmit");
+const { changeSubmit, checkSubmit } = require("../utils/userUtils");
 
 const refineController = {
     CallApi: async (req, res, next) => {
         try {
+            const checkNSubmit = await checkSubmit(req.params.id, "refine");
+            if (!checkNSubmit) {
+                return res.status(400).json({ message: "You dont have any turn" });
+            }
             const openai = configOPENAI();
             const promptOne = process.env.PROMPT_TASK_TWO;
             const promptTwo = req.body.options + req.body.prompt;
@@ -23,16 +27,20 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
-            res.status(200).json({
+            return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
         } catch (error) {
             console.log(error);
-            res.status(500).json("Something went wrong");
+            return res.status(500).json("Something went wrong");
         }
     },
     CallAnalyse: async (req, res, next) => {
         try {
+            const checkNSubmit = await checkSubmit(req.params.id, "refine");
+            if (!checkNSubmit) {
+                return res.status(400).json({ message: "You dont have any turn" });
+            }
             const openai = configOPENAI();
             const promptOne = req.body.content;
             const promptTwo = req.body.history;
@@ -51,16 +59,20 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
-            res.status(200).json({
+            return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
         } catch (error) {
             console.log(error);
-            res.status(500).json("Something went wrong");
+            return res.status(500).json("Something went wrong");
         }
     },
     CallCompare: async (req, res, next) => {
         try {
+            const checkNSubmit = await checkSubmit(req.params.id, "refine");
+            if (!checkNSubmit) {
+                return res.status(400).json({ message: "You dont have any turn" });
+            }
             const openai = configOPENAI();
             const listHistory = req.body.listHistory;
             const compare = req.body.prompt;
@@ -84,12 +96,12 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
-            res.status(200).json({
+            return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
         } catch (error) {
             console.log(error);
-            res.status(500).json("Something went wrong");
+            return res.status(500).json("Something went wrong");
         }
     },
     getPromptRefine: async (req, res) => {
