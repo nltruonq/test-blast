@@ -42,7 +42,7 @@ const mailController = {
             mailer.sendMail(process.env.MAIL_FROM_ADDRESS, "BLAST - Payment", mailer.templatePaymentAdmin(mail.email, mail.packageName));
             const newMail = new Mail({
                 email: mail.email,
-                content: mail?.content || `${mail.email} has purchased the ${mail.packageName} package`,
+                content: mail?.content || `Bought the ${mail.packageName} package`,
                 subject: "BLAST - Payment",
                 type: "payment",
             });
