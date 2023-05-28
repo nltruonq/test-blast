@@ -13,6 +13,9 @@ const mailSchema = new mongoose.Schema(
         subject: {
             type: String,
         },
+        sendingTime: {
+            type: String,
+        },
         type: {
             type: String,
             default: "contact",

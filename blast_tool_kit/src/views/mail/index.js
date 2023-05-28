@@ -30,8 +30,8 @@ const Mail = () => {
         { field: 'email', headerName: 'Email', width: 300 },
         // { field: 'id', headerName: 'NO', width: 50 },
         { field: 'subject', headerName: 'Subject', width: 200 },
-        { field: 'content', headerName: 'Content', width: 500 },
-        // { field: 'type', headerName: 'Type', width: 100 },
+        { field: 'content', headerName: 'Content', width: 350 },
+        { field: 'sendingTime', headerName: 'Time', width: 200 },
         {
             field: 'action',
             headerName: 'Actions',

@@ -13,11 +13,20 @@ const mailController = {
     },
     addMail: async (req, res) => {
         try {
+            const now = new Date(Date.now());
+            const day = now.getDate();
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
             const mail = req.body;
             const newMail = new Mail({
                 email: mail.email,
                 content: mail.content,
                 subject: mail?.subject || "BLAST - Feedback",
+                sendingTime: `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`,
             });
             await newMail.save();
             mailer.sendMail(process.env.MAIL_BOSS, newMail.subject, mailer.templateFeedbackEmail(newMail.email, newMail.content));
@@ -37,6 +46,14 @@ const mailController = {
     },
     sendMailPayment: async (req, res) => {
         try {
+            const now = new Date(Date.now());
+            const day = now.getDate();
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
             const mail = req.body;
             mailer.sendMail(mail.email, "BLAST - Payment", mailer.templatePayment(mail.email, mail.packageName));
             mailer.sendMail(process.env.MAIL_BOSS, "BLAST - Payment", mailer.templatePaymentAdmin(mail.email, mail.packageName));
@@ -44,6 +61,7 @@ const mailController = {
                 email: mail.email,
                 content: mail?.content || `Bought the ${mail.packageName} package`,
                 subject: "BLAST - Payment",
+                sendingTime: `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`,
                 type: "payment",
             });
             await newMail.save();
