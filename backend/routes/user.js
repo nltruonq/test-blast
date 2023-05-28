@@ -12,6 +12,9 @@ router.get("/history/:id", middlewareController.verifyToken, userController.find
 //GET A USER
 router.get("/:id", middlewareController.verifyToken, userController.getUser);
 
+//add free package
+router.post("/free", middlewareController.verifyToken, userController.addPackageFree);
+
 // Add package to user
 router.patch("/add_package", middlewareController.verifyTokenAndAdmin, userController.addPackage);
 // Add promotion to user

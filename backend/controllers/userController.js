@@ -1,5 +1,5 @@
 const User = require("../models/User");
-
+const Package = require("../models/Package");
 const bcrypt = require("bcrypt");
 const { sendMail } = require("../utils/mailer");
 const Promotion = require("../models/Promotion");
@@ -187,6 +187,38 @@ const userController = {
             const id = req.params.id;
             const packagesUser = await User.findOne({ _id: id }).select("packages");
             return res.status(200).json(packagesUser.packages);
+        } catch (err) {
+            return res.status(500).json(err);
+        }
+    },
+
+    //Find the package being used by a user
+    addPackageFree: async (req, res) => {
+        try {
+            const { userId, packageId } = req.body;
+            const packagesUser = await User.findOne({ _id: userId }).select("packages");
+            let hasFree = false;
+            packagesUser.packages.forEach((e) => {
+                if (e.packageId.equals(packageId)) {
+                    hasFree = true;
+                }
+            });
+            if (hasFree) {
+                return res.status(400).json({ message: "Free package can only be received once" });
+            }
+            const freePackage = await Package.findOne({ _id: packageId });
+            const date = new Date(Date.now());
+            const newPkg = {
+                packageId: freePackage._id,
+                packageName: freePackage.name,
+                numberSubmitFeedback: freePackage.numberSubmitFeedback,
+                numberSubmitRefine: freePackage.numberSubmitRefine,
+                amountTokenUsedFeedback: 0,
+                amountTokenUsedRefine: 0,
+                purchase_date: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
+            };
+            await User.findOneAndUpdate({ _id: userId }, { $push: { packages: newPkg } });
+            return res.status(200).json({ message: "Success!" });
         } catch (err) {
             return res.status(500).json(err);
         }
