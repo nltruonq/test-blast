@@ -3,9 +3,15 @@ const User = require("../models/User");
 const changeSubmit = async (userId, type = "feedback", amount = 1, decrease = true) => {
     try {
         const user = await User.findOne({ _id: userId }).select("packages promotions");
+        const now = new Date(Date.now());
+
         if (decrease) {
             let isChange = false;
             for (let i = 0; i < user.promotions.length; i++) {
+                const [d, m, y] = user.promotions[i].expiration_date.split("/");
+                if (new Date(`${y}-${m}-${d}`) < now) {
+                    continue;
+                }
                 if (type === "feedback") {
                     if (user.promotions[i].numberSubmitFeedback > 0) {
                         user.promotions[i].numberSubmitFeedback -= 1;
