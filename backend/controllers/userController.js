@@ -103,12 +103,12 @@ const userController = {
 
             const now = new Date(Date.now());
             const purchase_date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
-            now.setDate(now.getDate() + promotionPackage.time);
-            const expiration_date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
 
             if (hasPackage) {
                 const promotionPackage = await Promotion.findOne({ packageId: package.packageId, isAffiliate: false });
                 if (promotionPackage) {
+                    now.setDate(now.getDate() + promotionPackage.time);
+                    const expiration_date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
                     const promotionPkg = {
                         promotionId: promotionPackage._id,
                         promotionName: promotionPackage.name,
@@ -123,6 +123,8 @@ const userController = {
             if (packagesUser.recommender && packagesUser.recommender !== "none") {
                 const promotionPackage = await Promotion.findOne({ packageId: package.packageId, isAffiliate: true });
                 if (promotionPackage) {
+                    now.setDate(now.getDate() + promotionPackage.time);
+                    const expiration_date = `${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}`;
                     const promotionPkg = {
                         promotionId: promotionPackage._id,
                         promotionName: promotionPackage.name,
