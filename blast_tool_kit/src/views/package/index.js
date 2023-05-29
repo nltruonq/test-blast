@@ -44,8 +44,11 @@ const Package = () => {
                     const currentRow = params.row;
                     const { value: formValues } = await Swal.fire({
                         title: 'Edit a package',
+                        width: '40em',
                         html:
-                            `<label>Name</label><input value=${JSON.stringify(currentRow.name)} id="swal-input1" class="swal2-input">` +
+                            `<div class="description-package"><label>Name</label><input value=${JSON.stringify(
+                                currentRow.name
+                            )} id="swal-input1" class="swal2-input">` +
                             `<div class="group-textarea"><label>Description</label><textarea id="swal-input2" class="swal2-input">${currentRow.description}</textarea></div>` +
                             `<label>Discount</label><input value=${JSON.stringify(
                                 currentRow.discount
@@ -58,7 +61,7 @@ const Package = () => {
                             )} type="Number" id="swal-input5" class="swal2-input">` +
                             `<label>nRefine</label><input value=${JSON.stringify(
                                 currentRow.numberSubmitRefine
-                            )} type="Number" id="swal-input6" class="swal2-input">`,
+                            )} type="Number" id="swal-input6" class="swal2-input"></div>`,
 
                         focusConfirm: false,
                         preConfirm: () => {
@@ -150,13 +153,14 @@ const Package = () => {
     const handleCreate = async () => {
         const { value: formValues } = await Swal.fire({
             title: 'Creating a package',
+            width: '40em',
             html:
-                '<label>Name</label><input id="swal-input1" class="swal2-input">' +
+                '<div class="description-package"><label>Name</label><input id="swal-input1" class="swal2-input">' +
                 '<div class="group-textarea"><label class="label-textarea">Description</label><textarea id="swal-input2" class="swal2-input"></textarea></div>' +
                 '<label>Discount</label><input type="Number" id="swal-input3" class="swal2-input">' +
                 '<label>Price</label><input type="Number" id="swal-input4" class="swal2-input">' +
                 '<label>nFeedback</label><input type="Number" id="swal-input5" class="swal2-input">' +
-                '<label>nRefine</label><input type="Number" id="swal-input6" class="swal2-input">',
+                '<label>nRefine</label><input type="Number" id="swal-input6" class="swal2-input"></div>',
             focusConfirm: false,
             preConfirm: async () => {
                 if (

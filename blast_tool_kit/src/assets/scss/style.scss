@@ -131,6 +131,13 @@
     z-index: 12345678 !important;
 }
 
+.swal2-popup {
+    // width: 50em !important;
+}
+
+.swal2-select {
+}
+
 #swal2-html-container {
     label {
         min-width: 150px !important;
@@ -147,6 +154,14 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .description-package {
+        input, select, textarea {
+            margin-left: 10px;
+            min-width: 350px !important;
+            max-width: 350px !important;
+        }
     }
 }
 
