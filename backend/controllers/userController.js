@@ -216,7 +216,7 @@ const userController = {
             const packagesUser = await User.findOne({ _id: userId }).select("packages");
             let hasFree = false;
             packagesUser.packages.forEach((e) => {
-                if (e.packageId.equals(packageId) && e.packageName.toLowerCase() === "free") {
+                if (e.packageId === packageId && e.packageName.toLowerCase() === "free") {
                     hasFree = true;
                 }
             });
