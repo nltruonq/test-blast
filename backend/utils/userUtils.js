@@ -103,7 +103,7 @@ const checkSubmit = async (userId, type = "feedback") => {
     }
 };
 
-const userUsedToken = async (userId, feature = "feedback", amount) => {
+const userUsedToken = async (userId, feature = "feedback", promptTokens, completionTokens) => {
     try {
         const now = new Date(Date.now());
         const day = now.getDate();
@@ -112,8 +112,9 @@ const userUsedToken = async (userId, feature = "feedback", amount) => {
 
         const newToken = new Token({
             userId: userId,
-            amount: amount,
-            feature: feature,
+            feature,
+            promptTokens,
+            completionTokens,
             date: `${day}/${month}/${year}`,
         });
 

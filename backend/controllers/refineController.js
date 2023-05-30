@@ -27,7 +27,7 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
-            await userUsedToken(req.params.id, "refine", response.data.usage.total_tokens);
+            await userUsedToken(req.params.id, "refine", response.data.usage.prompt_tokens, response.data.usage.completion_tokens);
             return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
@@ -60,7 +60,7 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
-            await userUsedToken(req.params.id, "refine", response.data.usage.total_tokens);
+            await userUsedToken(req.params.id, "refine", response.data.usage.prompt_tokens, response.data.usage.completion_tokens);
             return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
@@ -98,7 +98,7 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
-            await userUsedToken(req.params.id, "refine", response.data.usage.total_tokens);
+            await userUsedToken(req.params.id, "refine", response.data.usage.prompt_tokens, response.data.usage.completion_tokens);
             return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });

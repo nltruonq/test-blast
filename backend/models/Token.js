@@ -6,7 +6,10 @@ const tokenSchema = new mongoose.Schema(
             type: String,
             required: [true, "Required"],
         },
-        amount: {
+        promptTokens: {
+            type: Number,
+        },
+        completionTokens: {
             type: Number,
         },
         feature: {
@@ -14,7 +17,7 @@ const tokenSchema = new mongoose.Schema(
         },
         date: {
             type: String,
-        }
+        },
     },
     { timestamps: true }
 );
