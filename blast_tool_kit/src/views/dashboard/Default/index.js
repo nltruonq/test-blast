@@ -4,21 +4,34 @@ import { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 
 // project imports
-import EarningCard from './EarningCard';
+import EarningCard from './SpendingCard';
 import PopularCard from './PopularCard';
-import TotalOrderLineChartCard from './TotalOrderLineChartCard';
+import TotalOrderLineChartCard from './EarningCard';
 import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 
+import { createAxios } from '../../../axios/axiosInstance';
+
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
     const [isLoading, setLoading] = useState(true);
-    console.log(process.env);
-    useEffect(() => {
+
+    const [spending, setSpending] = useState({});
+
+    let user = JSON.parse(localStorage.getItem('blast-user'));
+    let axiosJWT = createAxios(user);
+
+    const getSpending = async () => {
+        const rs = await axiosJWT.get(`${process.env.REACT_APP_SERVER_API}/token`);
+        setSpending(rs.data);
         setLoading(false);
+    };
+
+    useEffect(() => {
+        getSpending();
     }, []);
 
     return (
@@ -26,7 +39,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
                     <Grid item lg={4} md={6} sm={6} xs={12}>
-                        <EarningCard isLoading={isLoading} />
+                        <EarningCard spending={spending} isLoading={isLoading} />
                     </Grid>
                     <Grid item lg={4} md={6} sm={6} xs={12}>
                         <TotalOrderLineChartCard isLoading={isLoading} />

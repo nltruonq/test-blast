@@ -2,34 +2,41 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 // material-ui
-import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
+import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
+
+// third-party
+import Chart from 'react-apexcharts';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
+import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
+
+import ChartDataMonth from './chart-data/total-order-month-line-chart';
+import ChartDataYear from './chart-data/total-order-year-line-chart';
 
 // assets
-import EarningIcon from 'assets/images/icons/earning.svg';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
-import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
-import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
-import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { DatePicker } from '@mui/lab';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.primary.dark,
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
+    '&>div': {
+        position: 'relative',
+        zIndex: 5
+    },
     '&:after': {
         content: '""',
         position: 'absolute',
         width: 210,
         height: 210,
-        background: theme.palette.secondary[800],
+        background: theme.palette.primary[800],
         borderRadius: '50%',
+        zIndex: 1,
         top: -85,
         right: -95,
         [theme.breakpoints.down('sm')]: {
@@ -40,9 +47,10 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     '&:before': {
         content: '""',
         position: 'absolute',
+        zIndex: 1,
         width: 210,
         height: 210,
-        background: theme.palette.secondary[800],
+        background: theme.palette.primary[800],
         borderRadius: '50%',
         top: -125,
         right: -15,
@@ -54,28 +62,23 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     }
 }));
 
-// ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
+// ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
 
-const EarningCard = ({ isLoading }) => {
+const TotalOrderLineChartCard = ({ isLoading }) => {
     const theme = useTheme();
 
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
+    const [timeValue, setTimeValue] = useState(true);
+    const handleChangeTime = (event, newValue) => {
+        setTimeValue(newValue);
     };
 
     return (
         <>
             {isLoading ? (
-                <SkeletonEarningCard />
+                <SkeletonTotalOrderCard />
             ) : (
                 <CardWrapper border={false} content={false}>
-                    <Box sx={{ p: 2.25 }}>
+                    <Box sx={{ p: 2.25, height: 200 }}>
                         <Grid container direction="column">
                             <Grid item>
                                 <Grid container justifyContent="space-between">
@@ -85,92 +88,45 @@ const EarningCard = ({ isLoading }) => {
                                             sx={{
                                                 ...theme.typography.commonAvatar,
                                                 ...theme.typography.largeAvatar,
-                                                backgroundColor: theme.palette.secondary[800],
+                                                backgroundColor: theme.palette.primary[800],
+                                                color: '#fff',
                                                 mt: 1
                                             }}
                                         >
-                                            <img src={EarningIcon} alt="Notification" />
+                                            <LocalMallOutlinedIcon fontSize="inherit" />
                                         </Avatar>
-                                    </Grid>
-                                    <Grid item>
-                                        {/* <Avatar
-                                            variant="rounded"
-                                            sx={{
-                                                ...theme.typography.commonAvatar,
-                                                ...theme.typography.mediumAvatar,
-                                                backgroundColor: theme.palette.secondary.dark,
-                                                color: theme.palette.secondary[200],
-                                                zIndex: 1
-                                            }}
-                                            aria-controls="menu-earning-card"
-                                            aria-haspopup="true"
-                                            onClick={handleClick}
-                                        >
-                                            <MoreHorizIcon fontSize="inherit" />
-                                        </Avatar> */}
-                                        {/* <Menu
-                                            id="menu-earning-card"
-                                            anchorEl={anchorEl}
-                                            keepMounted
-                                            open={Boolean(anchorEl)}
-                                            onClose={handleClose}
-                                            variant="selectedMenu"
-                                            anchorOrigin={{
-                                                vertical: 'bottom',
-                                                horizontal: 'right'
-                                            }}
-                                            transformOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right'
-                                            }}
-                                        >
-                                            <MenuItem onClick={handleClose}>
-                                                <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> Import Card
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                <FileCopyTwoToneIcon sx={{ mr: 1.75 }} /> Copy Data
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} /> Export
-                                            </MenuItem>
-                                            <MenuItem onClick={handleClose}>
-                                                <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
-                                            </MenuItem>
-                                        </Menu> */}
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item>
+                            <Grid item sx={{ mb: 0.75 }}>
                                 <Grid container alignItems="center">
-                                    <Grid item>
-                                        <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                            $500.00
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item>
-                                        <Avatar
-                                            sx={{
-                                                cursor: 'pointer',
-                                                ...theme.typography.smallAvatar,
-                                                backgroundColor: theme.palette.secondary[200],
-                                                color: theme.palette.secondary.dark
-                                            }}
-                                        >
-                                            <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
-                                        </Avatar>
+                                    <Grid item xs={6}>
+                                        <Grid container alignItems="center">
+                                            <Grid item>
+                                                {timeValue ? (
+                                                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                                                        $108
+                                                    </Typography>
+                                                ) : (
+                                                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                                                        $961
+                                                    </Typography>
+                                                )}
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <Typography
+                                                    sx={{
+                                                        fontSize: '1rem',
+                                                        fontWeight: 500,
+                                                        color: theme.palette.primary[200]
+                                                    }}
+                                                >
+                                                    Total Earning
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
-                            <Grid item sx={{ mb: 1.25 }}>
-                                <Typography
-                                    sx={{
-                                        fontSize: '1rem',
-                                        fontWeight: 500,
-                                        color: theme.palette.secondary[200]
-                                    }}
-                                >
-                                    Total Earning
-                                </Typography>
                             </Grid>
                         </Grid>
                     </Box>
@@ -180,8 +136,8 @@ const EarningCard = ({ isLoading }) => {
     );
 };
 
-EarningCard.propTypes = {
+TotalOrderLineChartCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default EarningCard;
+export default TotalOrderLineChartCard;
