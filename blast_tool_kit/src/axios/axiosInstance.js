@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { SERVER_API } from 'host';
+// import { SERVER_API } from 'host';
+const SERVER_API = process.env.REACT_APP_SERVER_API;
 import jwt_decode from 'jwt-decode';
 
 const refreshToken = async () => {

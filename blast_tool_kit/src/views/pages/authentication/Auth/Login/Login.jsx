@@ -9,8 +9,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import bgOne from 'assets/images/bgs/login-1.svg';
 import bgTwo from 'assets/images/bgs/login-2.svg';
 import axios from 'axios';
-import { SERVER_API } from 'host';
+// import { SERVER_API } from 'host';
 import Swal from 'sweetalert2';
+
+const SERVER_API = process.env.REACT_APP_SERVER_API;
 
 function Login() {
     const [userName, setUserName] = useState('');

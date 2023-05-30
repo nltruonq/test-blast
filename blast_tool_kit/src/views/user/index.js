@@ -15,11 +15,14 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import { SERVER_API } from '../../host/index';
+// import { SERVER_API } from '../../host/index';
+
 import { SET_MENU } from 'store/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAxios } from '../../axios/axiosInstance';
 import { useSearchParams } from 'react-router-dom';
+
+const SERVER_API = process.env.REACT_APP_SERVER_API;
 
 const customStyles = {
     content: {

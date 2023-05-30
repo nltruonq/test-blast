@@ -16,7 +16,9 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { createAxios } from '../../axios/axiosInstance';
 
-import { SERVER_API } from '../../host/index';
+// import { SERVER_API } from '../../host/index';
+
+const SERVER_API = process.env.REACT_APP_SERVER_API;
 
 const Mail = () => {
     const [mails, setMails] = useState([]);
