@@ -241,7 +241,7 @@ const userController = {
                 numberSubmitRefine: freePackage.numberSubmitRefine,
             });
         } catch (err) {
-            return res.status(500).json(err);
+            return res.status(500).json(err.message);
         }
     },
 
