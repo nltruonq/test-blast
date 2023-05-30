@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const Token = require("../models/Token");
 
 const changeSubmit = async (userId, type = "feedback", amount = 1, decrease = true) => {
     try {
@@ -102,4 +103,25 @@ const checkSubmit = async (userId, type = "feedback") => {
     }
 };
 
-module.exports = { changeSubmit, checkSubmit };
+const userUsedToken = async (userId, feature = "feedback", amount) => {
+    try {
+        const now = new Date(Date.now());
+        const day = now.getDate();
+        const month = now.getMonth() + 1;
+        const year = now.getFullYear();
+
+        const newToken = new Token({
+            userId: userId,
+            amount: amount,
+            feature: feature,
+            date: `${day}/${month}/${year}`,
+        });
+
+        await newToken.save();
+        return newToken;
+    } catch (err) {
+        return err.message;
+    }
+};
+
+module.exports = { changeSubmit, checkSubmit, userUsedToken };

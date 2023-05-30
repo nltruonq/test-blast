@@ -2,7 +2,7 @@ const configOPENAI = require("../configs/openAI");
 
 const Prompt = require("../models/Prompt");
 
-const { changeSubmit, checkSubmit } = require("../utils/userUtils");
+const { changeSubmit, checkSubmit, userUsedToken } = require("../utils/userUtils");
 
 const refineController = {
     CallApi: async (req, res, next) => {
@@ -27,6 +27,7 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
+            await userUsedToken(req.params.id, "refine", response.data.usage.total_tokens);
             return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
@@ -59,6 +60,7 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
+            await userUsedToken(req.params.id, "refine", response.data.usage.total_tokens);
             return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });
@@ -96,6 +98,7 @@ const refineController = {
                 top_p: 1,
             });
             await changeSubmit(req.params.id, "refine");
+            await userUsedToken(req.params.id, "refine", response.data.usage.total_tokens);
             return res.status(200).json({
                 message: response.data.choices[0].message.content,
             });

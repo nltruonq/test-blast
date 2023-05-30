@@ -9,6 +9,12 @@ const tokenSchema = new mongoose.Schema(
         amount: {
             type: Number,
         },
+        feature: {
+            type: String,
+        },
+        date: {
+            type: String,
+        }
     },
     { timestamps: true }
 );
