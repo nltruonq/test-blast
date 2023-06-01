@@ -172,8 +172,8 @@ const User = () => {
                                     packageId: aPackge._id,
                                     numberSubmitFeedback: aPackge.numberSubmitFeedback,
                                     numberSubmitRefine: aPackge.numberSubmitRefine,
-                                    amountTokenUsedFeedback: 0,
-                                    amountTokenUsedRefine: 0,
+                                    price: aPackge.price,
+                                    discount: aPackge.discount,
                                     purchase_date: `${pur_date.getDate()}/${pur_date.getMonth() + 1}/${pur_date.getFullYear()}`
                                     // expiration_date: `${exp_date.getDate()}/${exp_date.getMonth() + 1}/${exp_date.getFullYear()}`
                                 }

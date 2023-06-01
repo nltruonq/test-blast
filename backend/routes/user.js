@@ -9,6 +9,8 @@ router.get("/all", middlewareController.verifyTokenAndAdmin, userController.getA
 router.get("/currently/:id", middlewareController.verifyToken, userController.findPackageCurrentlyUse);
 //GET package history of user
 router.get("/history/:id", middlewareController.verifyToken, userController.findPackageHistory);
+//calculate
+router.get("/calculate", middlewareController.verifyTokenAndAdmin, userController.calculateRevenue);
 //GET A USER
 router.get("/:id", middlewareController.verifyToken, userController.getUser);
 

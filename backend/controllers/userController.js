@@ -230,8 +230,7 @@ const userController = {
                 packageName: freePackage.name,
                 numberSubmitFeedback: freePackage.numberSubmitFeedback,
                 numberSubmitRefine: freePackage.numberSubmitRefine,
-                amountTokenUsedFeedback: 0,
-                amountTokenUsedRefine: 0,
+                price: 0,
                 purchase_date: `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
             };
             await User.findOneAndUpdate({ _id: userId }, { $push: { packages: newPkg } });
@@ -343,6 +342,55 @@ const userController = {
         } catch (err) {
             return res.status(500).json(err.message);
         }
+    },
+    calculateRevenue: async (req, res) => {
+        try {
+            const query = req.query;
+            let pkgs = await User.find({}).select("packages");
+            if (query.date) {
+                pkgs = pkgs.filter((e) => {
+                    e.packages = e.packages.filter((p) => p.purchase_date.includes(query.date));
+                    return e;
+                });
+            }
+            pkgs = pkgs.map((pkg) => {
+                pkg.packages = userController.groupBy(pkg.packages, function (e) {
+                    return e.packageName;
+                });
+                return pkg;
+            });
+
+            for (let i = 0; i < pkgs.length; i++) {
+                for (let key in pkgs[i].packages[0]) {
+                    if (pkgs[i].packages[0][key].length > 1) {
+                        pkgs[i].packages[0][key][0].discount = 0;
+                    }
+                }
+            }
+
+            let total = 0;
+            for (let i = 0; i < pkgs.length; i++) {
+                for (let key in pkgs[i].packages[0]) {
+                    for (let j = 0; j < pkgs[i].packages[0][key].length; j++) {
+                        total += (pkgs[i].packages[0][key][j].price * (100 - pkgs[i].packages[0][key][j].discount)) / 100;
+                    }
+                }
+            }
+
+            return res.status(200).json({ pkgs, total });
+        } catch (err) {
+            return res.status(500).json(err.message);
+        }
+    },
+    groupBy: (arr, keySelector) => {
+        return arr.reduce(function (groups, item) {
+            const key = keySelector(item);
+            if (!groups[key]) {
+                groups[key] = [];
+            }
+            groups[key].push(item);
+            return groups;
+        }, {});
     },
 };
 

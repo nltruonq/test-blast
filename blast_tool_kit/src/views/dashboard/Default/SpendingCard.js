@@ -60,16 +60,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 const EarningCard = ({ isLoading, spending }) => {
     const theme = useTheme();
 
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
     useEffect(() => {}, []);
 
     return (

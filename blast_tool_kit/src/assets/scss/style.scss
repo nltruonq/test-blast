@@ -168,3 +168,10 @@
 .MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel {
     margin-bottom: 0;
 }
+
+input[type='month'] {
+    height: 30px;
+    padding: 5px;
+    border-radius: 4px;
+    outline: none;
+}
